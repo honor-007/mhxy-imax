@@ -1,0 +1,18 @@
+{
+    "character_id": "1597532",
+    "escort_level": "3",
+    "reward_type": "储备金",
+    "character_hp_threshold": "0%",
+    "character_mp_threshold": "0%",
+    "character_restore_type": "坐骑酒肆",
+    "bb_hp_threshold": "0%",
+    "bb_mp_threshold": "0%",
+    "bb_restore_type": "坐骑巫医",
+    "stay": "f1",
+    "wuyi": "f1",
+    "frequency": "50",
+    "flag_type": "蓝色合成旗",
+    "dazuo": "无",
+    "character_attack": "alt+q",
+    "bb_attack": "alt+a"
+}
