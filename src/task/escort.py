@@ -29,6 +29,7 @@ def fly_to(location):
     :param location:
     :return:
     """
+    log_queue.put("使用飞行旗传送到镖局...")
     now = MapTask.GetMapName()
     if now == location:
         return
@@ -42,7 +43,7 @@ def fly_to(location):
         return fly_to(location)
     if escort_stop_event.is_set():
         return
-    game_mouse.move(res[0], res[1], bias=10)
+    game_mouse.move(res[0], res[1], bias=5)
     game_mouse.right_click()
     time.sleep(0.5)
     screenshot = winShot(WINDOW_ID)
@@ -78,12 +79,14 @@ def fly_to(location):
     if MapTask.GetMapName() != "长安城":
         return fly_to(location)
     # 进入镖局房屋内
+    log_queue.put("进入镖局房屋内...")
     inputautogui.hotkey('alt', 'h')
     game_mouse.move_click(582 + random.randint(1, 5) * random.choice([-1, 1]),
                           360 + random.randint(1, 5) * random.choice([-1, 1]), bias=5)
     time.sleep(2)
     # 向郑镖头移动
-    game_mouse.move_click(592 + random.randint(1, 50) * random.choice([1]),
+    log_queue.put("向郑镖头移动...")
+    game_mouse.move_click(612 + random.randint(1, 50) * random.choice([1]),
                           253 + random.randint(1, 20) * random.choice([-1, 1]), bias=20)
     time.sleep(1)
 
@@ -94,6 +97,7 @@ def get_escort_task(level=4):
     :param level:押镖任务等级
     :return:是否成功
     """
+    log_queue.put("开始领取押镖任务...")
     task_info = get_task_info(TaskType)
     if task_info:
         log_queue.put(f"当前已有押镖任务,任务目的地:{task_info}...")
@@ -108,13 +112,13 @@ def get_escort_task(level=4):
     log_queue.put(f"达到郑镖头附近")
     # 识别郑镖头坐标
     result = NpcTask.findNpc(TaskNpc)
-    log_queue.put(f"成功识别郑镖头")
     if not result:
         return
+    log_queue.put(f"成功识别郑镖头")
     game_mouse.move_click(result[0], result[1])
     time.sleep(2)
     # click task button
-    check_result = click_check(retry=30, sleep_time=30)
+    check_result = click_check(retry=5, sleep_time=30)
 
     # 遇到弹窗则要重新点击npc
     if check_result:
@@ -125,6 +129,7 @@ def get_escort_task(level=4):
         game_mouse.move_click(result[0], result[1])
         time.sleep(3)
     # 选择任务
+    log_queue.put(f"选择领取{level}级镖银任务")
     if not click_button(f"escort_{level}"):
         log_queue.put(f"领取{level}级镖银任务失败")
         return 1
@@ -212,11 +217,10 @@ def finish_escort_task(npc):
 
 def escort_one_time():
     # 领取押镖任务
-    if get_escort_task(escort_setting['escort_level']) != 0:
-        return
-
-    if escort_stop_event.is_set():
-        return
+    while get_escort_task(escort_setting['escort_level']) != 0:
+        if escort_stop_event.is_set():
+            return
+        continue
 
     # 获取任务目的npc
     npc = escort_npc()

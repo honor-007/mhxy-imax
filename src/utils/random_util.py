@@ -7,7 +7,7 @@ def random_button_coordinate(rectangle):
     :return:
     """
     if rectangle:
-        x = random.randint(rectangle[0][0]+10, rectangle[2][0]-10)
-        y = random.randint(rectangle[0][1]+5, rectangle[1][1]-5)
+        x = random.randint(rectangle[0][0], rectangle[2][0])
+        y = random.randint(rectangle[0][1], rectangle[1][1])
         return (x, y)
     return None

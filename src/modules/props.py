@@ -67,7 +67,7 @@ class Props:
         result = match_img(self.__screenshot(), get_source('props_to_npc'), 10, 10, rate)
         if result[3] is None:
             return
-        return result[3][result]
+        return result[3]['result']
 
 
 PropsFunction = Props(WINDOW_ID)

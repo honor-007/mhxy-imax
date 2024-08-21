@@ -8,7 +8,7 @@ from ttkbootstrap import OUTLINE
 from src.components.window import WINDOW_ID
 from src.modules.autoFight import AutoFight
 from src.task.escort import escort_one_time
-from src.utils.globalVariable import escort_stop_event, auto_fight_stop_event, dazuo_stop_event, alarm_stop_event, \
+from src.utils.globalVariable import escort_stop_event, auto_fight_stop_event,  alarm_stop_event, \
     stop_escort_event, clear_escort_event
 from assets.sources import *
 from src.utils.log_util import log_queue

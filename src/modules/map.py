@@ -168,7 +168,7 @@ class Map:
             :return:
 
             """
-        logger.info(f"当前场景移动,{region}->{next},小地图坐标点击({x},{y})")
+        log_queue.put(f"场景移动{region}->{next},小地图坐标点击({x},{y})")
         if region in ["轮回司"]:
             return
         self.openMap()
@@ -237,10 +237,12 @@ class Map:
             target_y = (y - y3) * dy + y4
             write_json(proxies_data, 'proxies')
             logger.info("{}地图比例尺记录结束,dx:{},dy:{}".format(region, dx, dy))
-        logger.info(f"开始进行地图点击{target_x, target_x}")
+        logger.info(
+            f"当前场景移动,{region}->{next},小地图坐标({x},{y}),游戏鼠标坐标({round(target_x)},{round(target_y)})")
         game_mouse.move_click(round(target_x), round(target_y), bias=2)
-        time.sleep(2)
+        time.sleep(1)
         inputautogui.press('tab')
+
         return 1
         pass
 
@@ -284,6 +286,9 @@ class Map:
             previous_city = now_city
             path = path_search.a_star_algorithm(now_city, end)
             log_queue.put(f"当前场景:{now_city},目的场景{end},计算路线:{path}")
+            if path is None:
+                logger.warning(f"无法查到从当前场景:{now_city}到目的场景{end}的路线")
+                return
 
             next_city = path[1]
 

@@ -65,6 +65,7 @@ class NPC:
         MapTask.MoveToTarget(location, "None")
         location_flag = npc_info['location_flag']
         if len(location_flag) == 0:
+            logger.warning("npc.location_flag 为none")
             return
         if name not in ["杨戬", "李靖", "菩提祖师", "秦琼", "三大王", "冰冰姑娘", "郑镖头", "观音姐姐", "白虎堂总管"]:
             return
@@ -83,12 +84,12 @@ class NPC:
             if result[3]:
                 x, y = result[3]['result']
                 if name == "郑镖头":
-                    print("npc ----------")
-                    r = random.randrange(80, 100, 5)
-                    bias = random.randrange(0, r, 5) * random.choice([-1, 1])
-                    abs_x_bias = math.sqrt(r * r - bias * bias)
-                    x_bias = abs_x_bias * random.choice([-1, 1])
-                    game_mouse.move_click(x + x_bias, y + bias, bias=10)
+                    # r = random.randrange(80, 100, 5)
+                    # bias = random.randrange(0, r, 5) * random.choice([-1, 1])
+                    # abs_x_bias = math.sqrt(r * r - bias * bias)
+                    # x_bias = abs_x_bias * random.choice([-1, 1])
+                    # logger.info(f"最后一次向郑镖头靠近,({x + x_bias},{y + bias})")
+                    game_mouse.move_click(random.randint(800,950), random.randint(400,500), bias=20)
                 else:
                     game_mouse.move_click(x, y, bias=10)
                 time.sleep(5)

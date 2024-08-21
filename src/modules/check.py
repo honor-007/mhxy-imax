@@ -40,12 +40,15 @@ def is_have_check(img=None):
         screenshot = winShot(WINDOW_ID)
     move_corp_sceenshot = hsvFilterWordWhite(crop_image_data(screenshot, left_up=(148, 41), right_down=(701, 280)))
     result_word = find_text(move_corp_sceenshot, ["鼠标", "点选"])
-    print(result_word)
     result_chengyu = match_img(screenshot, get_source("idiom_confirm"), 10, 10, 0.92)
     result_cheng_yu_reset = match_img(screenshot, get_source("idiom_reset"), 10, 10, 0.95)[3]
     if result_word is not None or result_chengyu[3] is not None or result_cheng_yu_reset is not None:
         # TODO 收集训练集用 正式环境删除
-        save_image(screenshot, check_image_save_path)
+        basedir = os.path.abspath(os.path.dirname(__file__))
+        timestamp = time.time()
+        source_path = os.path.join(basedir, 'train_set', "is_have_check", f"{timestamp}.png")
+        cv2.imwrite(source_path, screenshot)
+
         if result_word is not None:
             leftup = (result_word[0], result_word[1] - 180)
             # right = result_word[1] + 41

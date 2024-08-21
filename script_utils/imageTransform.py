@@ -137,8 +137,8 @@ def get_hp_rect(img_src, scale=20.0):
     if contours:
         c = max(contours, key=cv2.contourArea)
         x, y, w, h = cv2.boundingRect(c)
-        print(f"x坐标:{x},y坐标:{y},宽:{w},高:{h}")
-        print(f"x坐标:{x / scale},y坐标:{y / scale},宽:{w / scale},高:{h / scale}")
+        # print(f"x坐标:{x},y坐标:{y},宽:{w},高:{h}")
+        # print(f"x坐标:{x / scale},y坐标:{y / scale},宽:{w / scale},高:{h / scale}")
         # 四个顶点的坐标
         points = [(x, y), (x + w, y), (x + w, y + h), (x, y + h)]
 
@@ -182,8 +182,8 @@ def get_mp_rect(img_src, scale=20.0):
     if contours:
         c = max(contours, key=cv2.contourArea)
         x, y, w, h = cv2.boundingRect(c)
-        print(f"x坐标:{x},y坐标:{y},宽:{w},高:{h}")
-        print(f"x坐标:{x / scale},y坐标:{y / scale},宽:{w / scale},高:{h / scale}")
+        # print(f"x坐标:{x},y坐标:{y},宽:{w},高:{h}")
+        # print(f"x坐标:{x / scale},y坐标:{y / scale},宽:{w / scale},高:{h / scale}")
 
         # 四个顶点的坐标
         points = [(x, y), (x + w, y), (x + w, y + h), (x, y + h)]

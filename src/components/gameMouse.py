@@ -132,8 +132,7 @@ class Mouse:
             print("梦幻西游不在当前窗口py")
             return
         x, y = win32gui.ClientToScreen(self.hwnd, (int(x), int(y)))
-        # TODO
-        inputautogui.moveTo(x, y)
+        inputautogui.move_to(x, y)
         time.sleep(0.15)
         return x, y
 
@@ -188,7 +187,7 @@ class Mouse:
         # short_move_rate = 1.5
         # long_move_rate = 1.6
         # 相对坐标未超出范围(坐标点太靠近边框的要特殊处理,防止因为偏移到窗口外面去)
-        if x < 50 or x > 940 or y < 50 or y > 700:
+        if x < 50 or x > 940 or y < 50 or y > 650:
             short_move_rate = 3
             # 判断鼠标是否在梦幻西游窗口内
             if not self.__mouse_in_window():

@@ -108,12 +108,13 @@ class AutoFight:
         else:
             # 非战斗中的处理
             # 恢复
-            log_queue.put("非战斗中,检查人物状态")
+            # log_queue.put("非战斗中,检查人物状态")
             self.restore()
 
             if not self.dazuo_thread_is_running and self.auto_fight_setting['dazuo'] != '无':
                 dazuo_thread = threading.Thread(target=self.dazuo())
                 dazuo_thread.start()
+            time.sleep(3)
 
     def __auto_action(self):
         """
@@ -147,7 +148,7 @@ class AutoFight:
             # 发出报警声音 等待处理
             while not alarm_stop_event.is_set():
                 sound_util.playsound()
-                print("出现弹窗,需要手动处理")
+                log_queue.put("出现弹窗,需要手动处理")
             alarm_stop_event.clear()
         else:
             # 非战斗中的处理
@@ -169,7 +170,7 @@ class AutoFight:
         self.dazuo_thread_is_running = False
 
     def restore(self):
-        log_queue.put("检查人物和bb状态是否需要恢复")
+        # log_queue.put("检查人物和bb状态是否需要恢复")
         img = self.__screenshot()
         state_width = 50
         # 截取人物状态栏
@@ -182,8 +183,7 @@ class AutoFight:
             character_hp_rate = round(result[2] / state_width * 100)
             # log_queue.put(" character_hp_rate:{}".format(character_hp_rate))
             if character_hp_rate <= int(self.auto_fight_setting["character_hp_threshold"][:-1]):
-                # log_queue.put(
-                #     f'人物气血百分比{character_hp_rate},小于{self.auto_fight_setting["character_hp_threshold"]},需要执行加血指令')
+                # log_queue.put(f'人物气血百分比{character_hp_rate},小于{self.auto_fight_setting["character_hp_threshold"]},需要执行加血指令')
                 self.restore_character_hp_command()
         else:
             log_queue.put("未读取到人物hp,不做操作")
@@ -195,8 +195,7 @@ class AutoFight:
             character_mp_rate = round(result[2] / state_width * 100)
             # log_queue.put(" character_mp_rate:{}".format(character_mp_rate))
             if character_mp_rate <= int(self.auto_fight_setting["character_mp_threshold"][:-1]):
-                # log_queue.put(
-                #     f'人物魔法百分比:{character_mp_rate},小于{self.auto_fight_setting["character_mp_threshold"]},需要执行加蓝指令')
+                # log_queue.put(f'人物魔法百分比:{character_mp_rate},小于{self.auto_fight_setting["character_mp_threshold"]},需要执行加蓝指令')
                 self.restore_character_mp_command()
         else:
             log_queue.put("未读取到人物mp,不做操作")
@@ -207,8 +206,7 @@ class AutoFight:
             # log_queue.put("宠物hp x:{}, y:{}, w:{}, h:{}".format(result[0], result[1], result[2], result[3]))
             bb_hp_rate = round(result[2] / state_width)
             if bb_hp_rate <= int(self.auto_fight_setting["bb_hp_threshold"][:-1]):
-                # log_queue.put(
-                #     f'bb气血百分比:{bb_hp_rate},小于{self.auto_fight_setting["bb_hp_threshold"]},需要执行加血指令')
+                # log_queue.put(f'bb气血百分比:{bb_hp_rate},小于{self.auto_fight_setting["bb_hp_threshold"]},需要执行加血指令')
 
                 self.restore_bb_hp_command()
         else:
@@ -220,8 +218,7 @@ class AutoFight:
             # log_queue.put("宠物mp x:{}, y:{}, w:{}, h:{}".format(result[0], result[1], result[2], result[3]))
             bb_mp_rate = round(result[2] / state_width)
             if bb_mp_rate <= int(self.auto_fight_setting["bb_mp_threshold"][:-1]):
-                # log_queue.put(
-                #     f'bb魔法百分比:{bb_mp_rate},小于{self.auto_fight_setting["bb_mp_threshold"]},需要执行加蓝指令')
+                # log_queue.put(f'bb魔法百分比:{bb_mp_rate},小于{self.auto_fight_setting["bb_mp_threshold"]},需要执行加蓝指令')
                 self.restore_bb_mp_command()
         else:
             log_queue.put("未读取到宠物mp,不做操作")
@@ -321,7 +318,6 @@ class AutoFight:
             # TODO 收集训练集期间需手动处理弹窗
             self.__auto_click_four_people(fight_type, rate)
             self.__auto_action()
-            time.sleep(2)
             # self.__handle_click()
             # self.__auto_action()
             # self.__refresh_auto_fight_times()
