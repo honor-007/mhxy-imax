@@ -27,7 +27,7 @@ class NPC:
 
     def findNpc(self, name, rate=0.95):
         inputautogui.press("f9")
-        time.sleep(1)
+        time.sleep(random.random())
         npc_info = npc_data[name]
         template = os.path.join(basedir, 'npc', npc_info["template"])
         rate_list = {
@@ -43,7 +43,7 @@ class NPC:
                 result = match_img(self.__screenshot(), template, 10, 10, rate, mask=mask)
             if result[3]:
                 x, y = result[3]['result']
-                return x - 2, y - 80
+                return x - 2, y - 60
         else:
             if name in rate_list.keys():
                 rate = rate_list[name]
@@ -78,7 +78,7 @@ class NPC:
         for template in location_flag:
             template = os.path.join(basedir, 'npc', template)
             inputautogui.press('f9')
-            time.sleep(1)
+            # time.sleep(0.5)
             result = match_img(self.__screenshot(), template, 10, 10)
             logger.info("close to {}".format(name))
             if result[3]:
@@ -88,8 +88,11 @@ class NPC:
                     # bias = random.randrange(0, r, 5) * random.choice([-1, 1])
                     # abs_x_bias = math.sqrt(r * r - bias * bias)
                     # x_bias = abs_x_bias * random.choice([-1, 1])
-                    # logger.info(f"最后一次向郑镖头靠近,({x + x_bias},{y + bias})")
-                    game_mouse.move_click(random.randint(800,950), random.randint(400,500), bias=20)
+                    # target_x = x + random.randint(0, 10) * random.choice([-1, 1])
+                    # target_y = y + random.randint(5, 20)
+                    logger.info(f"最后一次向郑镖头靠近,({x},{y})")
+                    game_mouse.move(x, y, bias=20)
+                    # game_mouse.move_click(random.randint(800, 950), random.randint(400, 500), bias=20)
                 else:
                     game_mouse.move_click(x, y, bias=10)
                 time.sleep(5)

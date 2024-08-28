@@ -1,3 +1,5 @@
+from assets.sources import get_source
+from script_utils.matchTemplate import match_img
 import math
 import random
 
@@ -36,3 +38,22 @@ def random_button_coordinate(rectangle):
         y = random.randint(left_up[1] + padding + margin, right_down[1] - padding - margin)
 
     return x, y, padding
+
+
+button_name = ["reserves", "reserves_two"]
+
+for name in button_name:
+    result = match_img('test6.png', get_source(name), 10, 10, 0.95)[3]
+    if result is None:
+        print("result is None")
+        continue
+    rectangle = result['rectangle']
+    x, y, padding = random_button_coordinate(rectangle)
+    print(f"x:{x},y:{y},padding:{padding}")
+    left = rectangle[0][0]
+    up = rectangle[0][1]
+    right = rectangle[3][0]
+    down = rectangle[3][1]
+
+    if left < x + padding < right and left < x - padding < right and up < y + padding < down and up < y - padding < down:
+        print("ok!!")

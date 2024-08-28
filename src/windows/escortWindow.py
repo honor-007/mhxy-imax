@@ -155,7 +155,7 @@ class EscortGui():
         items_dazuo = ('无', 'f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f9')
         dazuo = tk.Combobox(self.window, font=font, width=width)
         dazuo['values'] = items_dazuo
-        default_value = escort_setting['dazuo']
+        default_value = escort_setting['stay']
         dazuo.current(items_dazuo.index(f'{default_value}'))
         dazuo.bind("<<ComboboxSelected>>", self.on_select_dazuo)  # 绑定事件，当下拉框选项改变时触发
         dazuo.grid(row=3, column=3, padx=2, pady=2, ipadx=0, ipady=0)
@@ -165,7 +165,7 @@ class EscortGui():
         character_attack['values'] = items_character_attack
         default_value = auto_fight_setting['character_attack']
         character_attack.current(items_character_attack.index(f'{default_value}'))
-        character_attack.bind("<<tk.ComboboxSelected>>", self.on_select_character_attack)  # 绑定事件，当下拉框选项改变时触发
+        character_attack.bind("<<ComboboxSelected>>", self.on_select_character_attack)  # 绑定事件，当下拉框选项改变时触发
         character_attack.grid(row=4, column=3, padx=2, pady=2, ipadx=0, ipady=0)
 
         items_bb_attack = ('无', 'alt+q', 'alt+a')
@@ -173,7 +173,7 @@ class EscortGui():
         bb_attack['values'] = items_bb_attack
         default_value = auto_fight_setting['bb_attack']
         bb_attack.current(items_bb_attack.index(f'{default_value}'))
-        bb_attack.bind("<<tk.ComboboxSelected>>", self.on_select_bb_attack)  # 绑定事件，当下拉框选项改变时触发
+        bb_attack.bind("<<ComboboxSelected>>", self.on_select_bb_attack)  # 绑定事件，当下拉框选项改变时触发
         bb_attack.grid(row=5, column=3, padx=2, pady=2, ipadx=0, ipady=0)
 
         # 功能按钮
@@ -245,7 +245,7 @@ class EscortGui():
         print("镖局飞行旗颜色:", event.widget.get())
 
     def on_select_dazuo(self, event):
-        escort_setting['dazuo'] = event.widget.get()
+        escort_setting['stay'] = event.widget.get()
         print("打坐:", event.widget.get())
 
     def on_select_character_attack(self, event):

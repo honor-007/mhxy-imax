@@ -1,13 +1,24 @@
-import os
 import threading
 import time
 
-import cv2
+from src.utils.log_util import log_queue
 
-from assets.sources import get_source, location_data
-from script_utils.cnOcr import cn_ocr, get_chinese_text, get_closed_string
-from script_utils.imageTransform import hsvFilterLocationWhite
-from script_utils.matchTemplate import match_img, crop_image_data
-level=3
-result = match_img("test8.png", get_source(f"escort_{level}"), 10, 10, 0.95)[3]
-print(result)
+
+def dazuo(var=1):
+    print(f"kaishi dazuo:{var}")
+    time.sleep(5)
+    print(f"jieshu dazuo:{var}")
+
+
+log_queue.put("启动打坐线程")
+# dazuo_thread = threading.Thread(target=stay(1))
+# dazuo2_thread = threading.Thread(target=stay(2))
+
+escort_thread = threading.Thread(target=dazuo, args=("1"))
+auto_fight_thread = threading.Thread(target=dazuo, args=('2'))
+escort_thread.start()
+auto_fight_thread.start()
+
+print("zhixingwanbi")
+time.sleep(10)
+print("over")

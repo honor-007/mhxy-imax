@@ -39,7 +39,7 @@ class AutoFightGui():
         character_hp_threshold['values'] = items_character_hp
         default_value = auto_fight_setting['character_hp_threshold']
         character_hp_threshold.current(items_character_hp.index(f'{default_value}'))
-        character_hp_threshold.bind("<<tk.ComboboxSelected>>",
+        character_hp_threshold.bind("<<ComboboxSelected>>",
                                     self.on_select_character_hp_threshold)  # 绑定事件，当下拉框选项改变时触发
         character_hp_threshold.grid(row=1, column=1, padx=2, pady=2, ipadx=0, ipady=0)
 
@@ -48,7 +48,7 @@ class AutoFightGui():
         character_mp_threshold['values'] = items_character_mp
         default_value = auto_fight_setting['character_mp_threshold']
         character_mp_threshold.current(items_character_mp.index(f'{default_value}'))
-        character_mp_threshold.bind("<<tk.ComboboxSelected>>",
+        character_mp_threshold.bind("<<ComboboxSelected>>",
                                     self.on_select_character_mp_threshold)  # 绑定事件，当下拉框选项改变时触发
         character_mp_threshold.grid(row=2, column=1, padx=2, pady=2, ipadx=0, ipady=0)
 
@@ -57,7 +57,7 @@ class AutoFightGui():
         character_restore_type['values'] = items_character_restore
         default_value = auto_fight_setting['character_restore_type']
         character_restore_type.current(items_character_restore.index(f'{default_value}'))
-        character_restore_type.bind("<<tk.ComboboxSelected>>",
+        character_restore_type.bind("<<ComboboxSelected>>",
                                     self.on_select_character_restore_type)  # 绑定事件，当下拉框选项改变时触发
         character_restore_type.grid(row=3, column=1, padx=2, pady=2, ipadx=0, ipady=0)
 
@@ -66,7 +66,7 @@ class AutoFightGui():
         stay['values'] = items_stay
         default_value = auto_fight_setting['stay']
         stay.current(items_stay.index(f'{default_value}'))
-        stay.bind("<<tk.ComboboxSelected>>", self.on_select_stay)  # 绑定事件，当下拉框选项改变时触发
+        stay.bind("<<ComboboxSelected>>", self.on_select_stay)  # 绑定事件，当下拉框选项改变时触发
         stay.grid(row=4, column=1, padx=2, pady=2, ipadx=0, ipady=0)
 
         items_bb_hp = ('0%', '25%', '50%', '75%', '80%', '90%')
@@ -74,7 +74,7 @@ class AutoFightGui():
         bb_hp_threshold['values'] = items_bb_hp
         default_value = auto_fight_setting['bb_hp_threshold']
         bb_hp_threshold.current(items_bb_hp.index(f'{default_value}'))
-        bb_hp_threshold.bind("<<tk.ComboboxSelected>>", self.on_select_bb_hp_threshold)  # 绑定事件，当下拉框选项改变时触发
+        bb_hp_threshold.bind("<<ComboboxSelected>>", self.on_select_bb_hp_threshold)  # 绑定事件，当下拉框选项改变时触发
         bb_hp_threshold.grid(row=5, column=1, padx=2, pady=2, ipadx=0, ipady=0)
 
         items_bb_mp = ('0%', '25%', '50%', '75%', '80%', '90%')
@@ -82,7 +82,7 @@ class AutoFightGui():
         bb_mp_threshold['values'] = items_bb_mp
         default_value = auto_fight_setting['bb_mp_threshold']
         bb_mp_threshold.current(items_bb_mp.index(f'{default_value}'))
-        bb_mp_threshold.bind("<<tk.ComboboxSelected>>", self.on_select_bb_mp_threshold)  # 绑定事件，当下拉框选项改变时触发
+        bb_mp_threshold.bind("<<ComboboxSelected>>", self.on_select_bb_mp_threshold)  # 绑定事件，当下拉框选项改变时触发
         bb_mp_threshold.grid(row=6, column=1, padx=2, pady=2, ipadx=0, ipady=0)
 
         items_bb_restore = ('右键状态条', '坐骑巫医')
@@ -90,7 +90,7 @@ class AutoFightGui():
         bb_restore_type['values'] = items_bb_restore
         default_value = auto_fight_setting['bb_restore_type']
         bb_restore_type.current(items_bb_restore.index(f'{default_value}'))
-        bb_restore_type.bind("<<tk.ComboboxSelected>>", self.on_select_bb_restore_type)  # 绑定事件，当下拉框选项改变时触发
+        bb_restore_type.bind("<<ComboboxSelected>>", self.on_select_bb_restore_type)  # 绑定事件，当下拉框选项改变时触发
         bb_restore_type.grid(row=7, column=1, padx=2, pady=2, ipadx=0, ipady=0)
 
         items_wuyi = ('f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f9')
@@ -98,7 +98,7 @@ class AutoFightGui():
         wuyi['values'] = items_wuyi
         default_value = auto_fight_setting['wuyi']
         wuyi.current(items_wuyi.index(f'{default_value}'))
-        wuyi.bind("<<tk.ComboboxSelected>>", self.on_select_wuyi)  # 绑定事件，当下拉框选项改变时触发
+        wuyi.bind("<<ComboboxSelected>>", self.on_select_wuyi)  # 绑定事件，当下拉框选项改变时触发
         wuyi.grid(row=8, column=1, padx=2, pady=2, ipadx=0, ipady=0)
 
         # 第三列内容[ "打坐"]
@@ -110,9 +110,9 @@ class AutoFightGui():
         items_dazuo = ('无', 'f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f9')
         dazuo = tk.Combobox(self.window, font=font, width=width)
         dazuo['values'] = items_dazuo
-        default_value = auto_fight_setting['dazuo']
+        default_value = auto_fight_setting['stay']
         dazuo.current(items_dazuo.index(f'{default_value}'))
-        dazuo.bind("<<tk.ComboboxSelected>>", self.on_select_dazuo)  # 绑定事件，当下拉框选项改变时触发
+        dazuo.bind("<<ComboboxSelected>>", self.on_select_dazuo)  # 绑定事件，当下拉框选项改变时触发
         dazuo.grid(row=0, column=3, padx=2, pady=2, ipadx=0, ipady=0)
 
         items_character_attack = ('无', 'alt+q', 'alt+a')
@@ -120,7 +120,7 @@ class AutoFightGui():
         character_attack['values'] = items_character_attack
         default_value = auto_fight_setting['character_attack']
         character_attack.current(items_character_attack.index(f'{default_value}'))
-        character_attack.bind("<<tk.ComboboxSelected>>", self.on_select_bb_attack)  # 绑定事件，当下拉框选项改变时触发
+        character_attack.bind("<<ComboboxSelected>>", self.on_select_bb_attack)  # 绑定事件，当下拉框选项改变时触发
         character_attack.grid(row=1, column=3, padx=2, pady=2, ipadx=0, ipady=0)
 
         items_bb_attack = ('无', 'alt+q', 'alt+a')
@@ -128,7 +128,7 @@ class AutoFightGui():
         bb_attack['values'] = items_bb_attack
         default_value = auto_fight_setting['bb_attack']
         bb_attack.current(items_bb_attack.index(f'{default_value}'))
-        bb_attack.bind("<<tk.ComboboxSelected>>", self.on_select_bb_attack)  # 绑定事件，当下拉框选项改变时触发
+        bb_attack.bind("<<ComboboxSelected>>", self.on_select_bb_attack)  # 绑定事件，当下拉框选项改变时触发
         bb_attack.grid(row=2, column=3, padx=2, pady=2, ipadx=0, ipady=0)
 
         # 功能按钮
@@ -186,7 +186,7 @@ class AutoFightGui():
         print("巫医快捷键:", event.widget.get())
 
     def on_select_dazuo(self, event):
-        auto_fight_setting['dazuo'] = event.widget.get()
+        auto_fight_setting['stay'] = event.widget.get()
         print("打坐:", event.widget.get())
 
     def on_select_character_attack(self, event):

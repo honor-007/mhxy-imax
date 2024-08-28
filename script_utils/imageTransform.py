@@ -50,6 +50,17 @@ def hsvFilterTaskRed(img_src, mask=True, scale=5):
     hsv = [0, 1, 70, 255, 0, 255]
     return hsvFilter(img_src, hsv, mask, scale)
 
+def hsvFilterEscortTaskNpcRed(img_src, mask=True, scale=5):
+    """
+    梦幻西游中的红色字体，如领取任务后，任务中高亮的红色信息
+    :param img_src:
+    :param mask:
+    :param scale:
+    :return:
+    """
+    hsv = [0, 145, 0, 248, 0, 255]
+    return hsvFilter(img_src, hsv, mask, scale)
+
 
 def hsvFilterWordWhite(img_src, mask=True, scale=5):
     """
@@ -60,6 +71,17 @@ def hsvFilterWordWhite(img_src, mask=True, scale=5):
     :return:
     """
     hsv = [0, 179, 0, 30, 191, 255]
+    return hsvFilter(img_src, hsv, mask, scale)
+
+def hsvFilterFourPeopleWhite(img_src, mask=True, scale=1):
+    """
+    筛选梦幻西游中的白色字体，如弹窗上出现的白色字体可以被筛选
+    :param img_src:
+    :param mask:
+    :param scale:
+    :return:
+    """
+    hsv = [0, 137, 0, 23, 105, 255]
     return hsvFilter(img_src, hsv, mask, scale)
 
 

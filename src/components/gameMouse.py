@@ -43,7 +43,10 @@ def if_arrived(x1, y1, x2, y2, bias=3):
     """
     x_abs = abs(x1 - x2)
     y_abs = abs(y1 - y2)
-    return x_abs <= bias and y_abs <= bias
+    if x_abs <= bias and y_abs <= bias:
+        logger.info(f"最终鼠标到达目的位置准确坐标:x:{x2},y:{y2}")
+        return True
+    # return x_abs <= bias and y_abs <= bias
 
 
 def if_mouse_using():
@@ -129,9 +132,10 @@ class Mouse:
     @locked_mouse
     def locked_client_move(self, x, y):
         if not self.__if_windows_in_screen():
-            print("梦幻西游不在当前窗口py")
+            log_queue("梦幻西游不在当前窗口,无法进行游戏鼠标移动...")
             return
         x, y = win32gui.ClientToScreen(self.hwnd, (int(x), int(y)))
+        logger.info(f"开始移动鼠标到屏幕({x},{y})")
         inputautogui.move_to(x, y)
         time.sleep(0.15)
         return x, y
@@ -172,7 +176,7 @@ class Mouse:
                 f"鼠标位置不在游戏窗口内,鼠标坐标:({x},{y}),窗口坐标:left:{left}, top:{top}, right:{right}, bottom:{bottom}")
             return False
 
-    def __go_game_rectangle(self, x, y, bias=3, count=15, short_move_rate=1.5, long_move_rate=1.6):
+    def __go_game_rectangle(self, x, y, bias=0, count=20, short_move_rate=2.0, long_move_rate=2.0):
         """
 
         :param x: mhxy窗口目标x坐标
@@ -181,13 +185,13 @@ class Mouse:
         :param count: 允许最大递归次数
         :return:
         """
-        logger.info(f"游戏鼠标目标坐标x:{x},y:{y},允许误差:{bias},开始移动...")
         x = int(x)
         y = int(y)
+        logger.info(f"游戏鼠标目标坐标x:{x},y:{y},允许误差:{bias},开始移动...")
         # short_move_rate = 1.5
         # long_move_rate = 1.6
         # 相对坐标未超出范围(坐标点太靠近边框的要特殊处理,防止因为偏移到窗口外面去)
-        if x < 50 or x > 940 or y < 50 or y > 650:
+        if x < 100 or x > 900 or y < 50 or y > 650:
             short_move_rate = 3
             # 判断鼠标是否在梦幻西游窗口内
             if not self.__mouse_in_window():
@@ -199,12 +203,13 @@ class Mouse:
                 # 第一次大距离移动 靠近目标点 采用(加速 快速 贝塞尔曲线移动)
                 dxs = int((x - mouse_x) / long_move_rate)
                 dys = int((y - mouse_y) / long_move_rate)
-                logger.info(f"第一次大距离移动,鼠标向x轴移动{dxs}px,向y轴移动{dys}px")
+                logger.info(f"第一次大距离移动,鼠标向x:{dxs},y:{dys}坐标移动 ")
                 inputautogui.move_rel(dxs, dys)
             else:
                 return 0
         else:
             logger.info(f"目标位置不靠近边缘,没有移出窗口的风险,移动距离不做处理")
+            logger.info(f"第一次大距离移动,鼠标向x{x},y{y}坐标移动")
             self.__client_move(x, y)
 
         if not self.__mouse_in_window():
@@ -219,8 +224,8 @@ class Mouse:
         x_moved, y_moved = self.get_mouse_point()
 
         # 逼进坐标
-        s_count = count
-        while not if_arrived(x, y, x_moved, y_moved, bias=bias) and s_count >= 1:
+        s_count = 1
+        while not if_arrived(x, y, x_moved, y_moved, bias=bias) and s_count <= count:
             if mouse_stop_event.is_set():
                 return 0
             kmbox_x, kmbox_y = pyautogui.position()
@@ -233,8 +238,8 @@ class Mouse:
             if not self.__mouse_in_window():
                 # result = self.__client_move(start_point(200, 900, 200, 600)[0], start_point(200, 900, 200, 600)[1])
                 logger.info(
-                    f"鼠标循环逼近时,鼠标移动出了窗口,short_move_rate:{short_move_rate},改为{short_move_rate + 0.2}进行尝试")
-                self.__client_move(x_moved, y_moved)
+                    f"鼠标循环逼近时,鼠标移动出了窗口,short_move_rate:{short_move_rate},改为{short_move_rate + 0.5}进行尝试")
+                self.__client_move(start_point(200, 900, 200, 600)[0], start_point(200, 900, 200, 600)[1])
                 self.__go_game_rectangle(x, y, bias, short_move_rate=short_move_rate + 0.2)
                 return 0
 
@@ -248,8 +253,8 @@ class Mouse:
                 kmNet.enc_move_auto(int((x - x_moved) / short_move_rate), int((y - y_moved) / short_move_rate),
                                     random.randint(20, 50))
             x_moved, y_moved = self.get_mouse_point()
-            s_count = s_count - 1
-            if s_count <= 0:
+            s_count = s_count + 1
+            if s_count > count:
                 logger.warning("鼠标移动一个地方超出最大次数,可移动次数")
                 return 1
         return 0

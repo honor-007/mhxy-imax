@@ -59,6 +59,7 @@ def get_file_path_by_name(directory, file_name):
 
 
 location_data = load_json("location")
+location_name_supplement_data = load_json("location_name_supplement")
 proxies_data = load_json("proxies")
 npc_data = load_json("npc")
 props_data = load_json("props")

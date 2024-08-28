@@ -4,7 +4,7 @@ import time
 import cv2
 import win32gui
 
-from assets.sources import location_data, get_source, proxies_data, write_json, join_path
+from assets.sources import location_data, get_source, proxies_data, write_json, join_path, location_name_supplement_data
 from script_utils.cnOcr import cn_ocr, get_closed_string, get_chinese_text, get_number
 from script_utils.grabScreen import winShot
 from script_utils.imageTransform import hsvFilterLocationWhite, hsvFilterErrorYellow
@@ -30,10 +30,11 @@ def click_button(button_name=None):
     print(f"按钮点击result:{result}")
     if result is not None:
         # 随机按钮上的一个坐标
-        x, y = random_button_coordinate(result['rectangle'])
+        x, y, padding = random_button_coordinate(result['rectangle'])
         # x, y = result['result']
-        game_mouse.move_click(x, y)
-        logger.warning(f"点击按钮:{button_name}成功")
+        logger.info(f"尝试点击[{button_name}]按钮,x:{x},y:{y},bias:{padding}")
+        game_mouse.move_click(x=x, y=y, bias=padding)
+        logger.info(f"点击按钮:{button_name}成功")
         return True
     else:
         cv2.imwrite("false.png", winShot(WINDOW_ID))
@@ -129,7 +130,9 @@ class Map:
                               right_down=(140, 42))
         raw_text = cn_ocr.ocr_for_single_line(hsvFilterLocationWhite(img, mask=True))['text']
         chinese_text = get_chinese_text(raw_text)
-        return get_closed_string(chinese_text, [location for location in location_data.keys()])
+        location_name_list = [location for location in location_data.keys()] + [location for location in
+                                                                                location_name_supplement_data]
+        return get_closed_string(chinese_text, location_name_list)
 
     def __is_map_open(self) -> bool:
         screenshot = self.__screenshot()
@@ -168,7 +171,7 @@ class Map:
             :return:
 
             """
-        log_queue.put(f"场景移动{region}->{next},小地图坐标点击({x},{y})")
+        # log_queue.put(f"场景移动{region}->{next},小地图坐标点击({x},{y})")
         if region in ["轮回司"]:
             return
         self.openMap()

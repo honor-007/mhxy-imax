@@ -320,12 +320,12 @@ class MouseKmboxEnc(MouseEventInterface):
 
     def right_click(self):
         kmNet.enc_right(1)  # 鼠标右键按下
-        time.sleep(random.randint(80, 400) / 1000)
+        time.sleep(random.randint(50, 250) / 1000)
         kmNet.enc_right(0)  # 鼠标右键松开
 
     def left_click(self):
         kmNet.enc_left(1)
-        time.sleep(random.randint(80, 400) / 1000)
+        time.sleep(random.randint(50, 250) / 1000)
         kmNet.enc_left(0)
 
     def left_press(self):
@@ -346,7 +346,7 @@ class MouseKmboxEnc(MouseEventInterface):
         key_code = vk_code_kmbox[key]
         if not key_code:
             return
-        kmNet.enc_keypress(key_code, random.randint(80, 350))
+        kmNet.enc_keypress(key_code, random.randint(50, 250))
 
     def hotkey(self, *args):
         for key in args:

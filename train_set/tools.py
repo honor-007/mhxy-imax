@@ -8,8 +8,8 @@ import cv2
 def save_image(img, type='unknow'):
     basedir = os.path.abspath(os.path.dirname(__file__))
 
-    if type == 'is_have_check':
-        folder_path = os.path.join(basedir, "is_have_check")
+    if type == 'escort_task_check':
+        folder_path = os.path.join(basedir, "escort_task_check")
     else:
         folder_path = os.path.join(basedir, "unknow")
     now = datetime.datetime.now()

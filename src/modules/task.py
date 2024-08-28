@@ -5,7 +5,8 @@ import win32gui
 from assets.sources import get_source, npc_data
 from script_utils.cnOcr import cn_ocr, get_closed_string
 from script_utils.grabScreen import winShot
-from script_utils.imageTransform import hsvFilterTaskRed
+from script_utils.imageTransform import hsvFilterTaskRed, hsvFilterEscortTaskNpcRed
+from script_utils.loggerConfig import logger
 from script_utils.matchTemplate import match_img, crop_image_data
 from src.components.window import WINDOW_ID
 
@@ -34,7 +35,8 @@ class GameTask:
         right_down = result[3]['rectangle'][3]
         crop_data = crop_image_data(screenshot, left_up=(left_up[0] - 136, left_up[1] + 47),
                                     right_down=(right_down[0], right_down[1] + 58))
-        crop_data = hsvFilterTaskRed(crop_data)
+        # crop_data = hsvFilterTaskRed(crop_data)
+        crop_data = hsvFilterEscortTaskNpcRed(crop_data)
         result = cn_ocr.ocr(crop_data)
         if result:
             for data in result:
@@ -53,6 +55,7 @@ def escort_npc():
     game_info = Game.get_task_text()
     if game_info == "":
         return ""
+    logger.warning(f"识别到任务红色字体:{game_info}")
     return get_closed_string(game_info, list(npc_data.keys()))
 
 

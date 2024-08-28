@@ -5,6 +5,9 @@ from tensorflow import keras
 from game_models.source import get_model
 from script_utils.loggerConfig import logger
 
+"""
+[点击面对着你的人物]弹窗预测模型
+"""
 AUTOTUNE = tf.data.experimental.AUTOTUNE
 
 model = None
@@ -32,7 +35,7 @@ def model_predict(imgs, use_paths=True):
     predictions = [row[0] for row in predictions]
     logger.info(predictions)
     min_index = predictions.index(min(predictions))
-    logger.info(f' 预测结果为 第 > {min_index + 1} < 张图片')
+    logger.info(f' 预测结果为 第 [ {min_index + 1} ] 张图片')
     return min_index
 
 

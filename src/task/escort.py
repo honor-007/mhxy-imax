@@ -23,12 +23,15 @@ TaskType = "押镖"
 TaskLocation = "长风镖局"
 
 
-def fly_to(location):
+def fly_to(location, retry=3):
     """
     进入镖局内场景
     :param location:
     :return:
     """
+    if retry <= 0:
+        log_queue.put("多次尝试进入长风镖局场景失败,停止尝试...")
+        return False
     log_queue.put("使用飞行旗传送到镖局...")
     now = MapTask.GetMapName()
     if now == location:
@@ -45,7 +48,7 @@ def fly_to(location):
         return
     game_mouse.move(res[0], res[1], bias=5)
     game_mouse.right_click()
-    time.sleep(0.5)
+    time.sleep(random.randint(5, 10) / 10)
     screenshot = winShot(WINDOW_ID)
     # result = match_img(screenshot, get_source('b_j_flag'), 10, 10, 0.95)
     if '合成旗' in escort_setting['flag_type']:
@@ -68,27 +71,34 @@ def fly_to(location):
 
         if escort_stop_event.is_set():
             return
-        game_mouse.move_click(x, y, bias=5)
+        game_mouse.move_click(x, y, bias=3)
     else:
         # 使用导标旗传送
         # TODO move下图片还没有
         click_result_2 = click_button_v2('single_flag_yes_i_will_go')
 
     PropsFunction.closeProps()
-    time.sleep(1)
+    time.sleep(random.randint(5, 10) / 10)
     if MapTask.GetMapName() != "长安城":
         return fly_to(location)
     # 进入镖局房屋内
     log_queue.put("进入镖局房屋内...")
     inputautogui.hotkey('alt', 'h')
+    inputautogui.press('f9')
     game_mouse.move_click(582 + random.randint(1, 5) * random.choice([-1, 1]),
                           360 + random.randint(1, 5) * random.choice([-1, 1]), bias=5)
-    time.sleep(2)
-    # 向郑镖头移动
-    log_queue.put("向郑镖头移动...")
-    game_mouse.move_click(612 + random.randint(1, 50) * random.choice([1]),
-                          253 + random.randint(1, 20) * random.choice([-1, 1]), bias=20)
     time.sleep(1)
+    if MapTask.GetMapName() != "长风镖局":
+        return fly_to(location, retry=retry - 1)
+
+    # time.sleep(random.randint(5, 10) / 10)
+    # 向郑镖头移动
+    log_queue.put("进入长风镖局后第一次向郑镖头移动...")
+    game_mouse.move_click(random.randint(800, 950), random.randint(350, 400), bias=20)
+    # game_mouse.move_click(612 + random.randint(1, 50) * random.choice([1]),
+    #                       253 + random.randint(1, 20) * random.choice([-1, 1]), bias=20)
+    time.sleep(random.randint(20, 25) / 10)
+    return True
 
 
 def get_escort_task(level=4):
@@ -114,9 +124,10 @@ def get_escort_task(level=4):
     result = NpcTask.findNpc(TaskNpc)
     if not result:
         return
-    log_queue.put(f"成功识别郑镖头")
+    log_queue.put(f"成功识别郑镖头,坐标x:{result[0]},y:{result[1]},点击郑镖头领取任务")
     game_mouse.move_click(result[0], result[1])
-    time.sleep(2)
+    time.sleep(round(random.random() * 2, 1))
+
     # click task button
     check_result = click_check(retry=5, sleep_time=30)
 
@@ -130,17 +141,24 @@ def get_escort_task(level=4):
         time.sleep(3)
     # 选择任务
     log_queue.put(f"选择领取{level}级镖银任务")
+    inputautogui.move_rel(random.randint(0, 20), random.randint(10, 50))
     if not click_button(f"escort_{level}"):
         log_queue.put(f"领取{level}级镖银任务失败")
         return 1
     log_queue.put(f"领取{level}级镖银任务成功")
     inputautogui.move_rel(random.randint(0, 20), random.randint(10, 50))
-    time.sleep(1)
-    if not click_button("reserves"):
-        if not click_button('reserves_two'):
-            log_queue.put(f"领取{level}级镖银任务失败")
-            return 1
-    time.sleep(5)
+    time.sleep(random.randint(5, 10) / 10)
+    if "储备金" == escort_setting['reward_type']:
+        if not click_button("reserves"):
+            if not click_button('reserves_two'):
+                log_queue.put(f"领取{level}级镖银任务失败")
+                return 1
+    else:
+        if not click_button("cash"):
+            if not click_button('cash_two'):
+                log_queue.put(f"领取{level}级镖银任务失败")
+                return 1
+    time.sleep(random.randint(5, 10) / 10)
     game_mouse.left_click()
     return 0
 
@@ -182,11 +200,8 @@ def finish_escort_task(npc):
         game_mouse.move(result[0], result[1])
         inputautogui.hotkey("alt", "g")
         time.sleep(0.1)
-        # 停止节点
-        if escort_stop_event.is_set():
-            return
         inputautogui.left_click()
-        time.sleep(4)
+        time.sleep(random.randint(5, 10) / 10)
         if not PropsFunction.isPropsToNpc():
             # 停止节点
             if escort_stop_event.is_set():

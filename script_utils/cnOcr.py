@@ -3,6 +3,8 @@ import re
 from rapidfuzz import fuzz, process
 from cnocr import CnOcr
 
+from script_utils.loggerConfig import logger
+
 cn_ocr = CnOcr()
 
 
@@ -22,7 +24,10 @@ def get_number(text):
 
 def get_closed_string(name: str, name_list: list) -> str:
     result = process.extractOne(name, name_list)
-    return result[0]
+    if result[1] > 0:
+        return result[0]
+    else:
+        return ''
 
 
 def find_text(source, txts, debug=True):
@@ -35,7 +40,7 @@ def find_text(source, txts, debug=True):
     """
     result = cn_ocr.ocr(source)
     if debug:
-        print("ocr识别文字结果:{}".format(result))
+        logger.info("ocr识别文字结果:{}".format(result))
     if not result:
         return
     for res in result:
@@ -46,5 +51,3 @@ def find_text(source, txts, debug=True):
                 y = res['position'][0][1]
                 return x, y
     return
-
-

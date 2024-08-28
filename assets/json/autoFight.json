@@ -1,14 +1,14 @@
 {
-  "character_id": "159753",
-  "character_hp_threshold": "90%",
-  "character_mp_threshold": "90%",
-  "character_restore_type": "右键状态条",
-  "bb_hp_threshold": "90%",
-  "bb_mp_threshold": "90%",
-  "bb_restore_type": "右键状态条",
-  "stay": "f1",
-  "wuyi": "f2",
-  "dazuo": "无",
-  "character_attack": "alt+q",
-  "bb_attack": "alt+a"
+    "character_id": "159753",
+    "character_hp_threshold": "75%",
+    "character_mp_threshold": "25%",
+    "character_restore_type": "坐骑酒肆",
+    "bb_hp_threshold": "0%",
+    "bb_mp_threshold": "0%",
+    "bb_restore_type": "右键状态条",
+    "stay": "f3",
+    "wuyi": "f2",
+    "dazuo": "f5",
+    "character_attack": "alt+q",
+    "bb_attack": "alt+a"
 }

@@ -21,7 +21,7 @@ from src.components.gameMouse import game_mouse
 from src.components.window import WINDOW_ID
 from src.utils import sound_util
 from src.utils.globalVariable import check_image_save_path, alarm_stop_event
-from src.utils.img_util import save_image
+from src.utils.img_util import save_image, save_escort_task_check
 from src.utils.log_util import log_queue
 
 WORD_IMAGE = {}
@@ -34,20 +34,18 @@ def is_have_check(img=None):
     0 移动弹窗, 1 成语弹窗
 
     """
+    log_queue.put("检查是否存在弹窗...")
     if img:
         screenshot = cv2.imread(img)
     else:
         screenshot = winShot(WINDOW_ID)
-    move_corp_sceenshot = hsvFilterWordWhite(crop_image_data(screenshot, left_up=(148, 41), right_down=(701, 280)))
+    move_corp_sceenshot = hsvFilterWordWhite(crop_image_data(screenshot, left_up=(300, 150), right_down=(770, 300)))
     result_word = find_text(move_corp_sceenshot, ["鼠标", "点选"])
     result_chengyu = match_img(screenshot, get_source("idiom_confirm"), 10, 10, 0.92)
     result_cheng_yu_reset = match_img(screenshot, get_source("idiom_reset"), 10, 10, 0.95)[3]
     if result_word is not None or result_chengyu[3] is not None or result_cheng_yu_reset is not None:
         # TODO 收集训练集用 正式环境删除
-        basedir = os.path.abspath(os.path.dirname(__file__))
-        timestamp = time.time()
-        source_path = os.path.join(basedir, 'train_set', "is_have_check", f"{timestamp}.png")
-        cv2.imwrite(source_path, screenshot)
+        save_escort_task_check(screenshot)
 
         if result_word is not None:
             leftup = (result_word[0], result_word[1] - 180)
@@ -193,7 +191,7 @@ def clcik_chengyu(rectangle):
     game_mouse.move(random.uniform(10, 700), random.uniform(10, 100))
 
 
-def click_check(retry=5, sleep_time=30):
+def click_check(retry=2, sleep_time=30):
     """
     接押镖任务时遇到弹窗的处理
     :param retry: 点击弹窗的次数
@@ -205,7 +203,7 @@ def click_check(retry=5, sleep_time=30):
     retry_times = retry
     cheng_yu_retry = 3
     if check_result is not None:
-        log_queue.put("遇到弹窗校验")
+        log_queue.put(f"遇到弹窗校验,弹窗类型{check_result[0]},开始处理...")
         have_check = True
         tan_type = check_result[0]
         rectangle = check_result[1]
@@ -218,7 +216,6 @@ def click_check(retry=5, sleep_time=30):
         # 点击移动弹窗
         if tan_type == 0 and retry_times >= 0:
             log_queue.put("开始点击移动弹窗,剩余次数{}".format(retry_times))
-            logger.info("开始点击移动弹窗,剩余次数{}".format(retry_times))
             flag = True
             click_move_word(rectangle)
             retry_times = retry_times - 1
@@ -227,6 +224,7 @@ def click_check(retry=5, sleep_time=30):
                                   left_up=rectangle[0], right_down=rectangle[1])
             # 识别文字
             words = detect_words(img)
+            logger.info(f"移动弹窗需要识别的文字为:{words}")
             if len(words) >= 4:
                 have_check = True
                 check_result = is_have_check()
@@ -239,19 +237,17 @@ def click_check(retry=5, sleep_time=30):
         elif tan_type == 0 and retry_times < 0:
             while not alarm_stop_event.is_set():
                 log_queue.put(f"出现[移动弹窗],已经尝试{retry}次点击,请尽快手动处理,处理后请点击已处理按钮")
-                print(f"出现[移动弹窗],已经尝试{retry}次点击,请尽快手动处理,处理后请点击已处理按钮")
                 sound_util.playsound()
+            time.sleep(2)
             alarm_stop_event.clear()
-            # logger.warning(f"出现移动弹窗，请尽快处理,已经尝试{retry}次点击")
-            # time.sleep(60)
         # 点击成语弹窗
         if tan_type == 1:
-            # send("{}出现成语弹窗，请尽快处理".format(common.title))
             if flag and cheng_yu_retry <= 0:
                 while not alarm_stop_event.is_set():
                     log_queue.put(f"出现[成语弹窗],已经尝试{retry}次点击,请尽快手动处理,处理后请点击已处理按钮")
                     print(f"出现[成语弹窗],已经尝试{cheng_yu_retry}次点击,请尽快手动处理,处理后请点击已处理按钮")
                     sound_util.playsound()
+                time.sleep(2)
                 alarm_stop_event.clear()
                 # logger.warning("弹窗成语识别/点击失败,请尽快处理")
             else:
@@ -272,10 +268,9 @@ def click_check(retry=5, sleep_time=30):
                 continue
         # 继续循环
         time.sleep(sleep_time)
-        # check_result = is_have_check()
+        # check_result = escort_task_check()
     if flag:
         log_queue.put("弹窗消失,弹窗类型{}".format(tan_type))
-        logger.info("弹窗消失,弹窗类型{}".format(tan_type))
     return flag
 
 
@@ -358,6 +353,7 @@ def get_words(crops_img, words):
         template_img = crop_image_data(crops_img, left_up=templates[k][0], right_down=templates[k][1])
         word = get_word(template_img, words, num=k)
         result += word
+    log_queue.put(f"不规则图形中的文字识别为:{result}")
     return result
 
 

@@ -39,7 +39,6 @@ class Fight:
             return True
 
         img = crop_image_data(self.__screenshot(), (892, 236), (953, 433))
-        cv2.imwrite(r"short_fight_action.png",img)
         result = match_img(img, get_source('short_fight_action'), 10, 10, 0.95)
         if result[2] is not None and float(result[2]) > 0.95:
             return True

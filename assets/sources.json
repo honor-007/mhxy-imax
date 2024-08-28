@@ -64,6 +64,11 @@
     "directory": "map",
     "desc": "地图信息，每个地图的出入口和进出方式"
   },
+  "location_name_supplement": {
+    "name": "location_name_supplement.json",
+    "directory": "map",
+    "desc": "地图名称补充(解决location.json不全的问题,不全会影响GetMapName()方法识别当前场景)"
+  },
   "map_flag": {
     "name": "map_flag.png",
     "directory": "map",
@@ -179,6 +184,16 @@
     "directory": "escort",
     "desc": "储备金"
   },
+  "cash": {
+    "name": "cash.png",
+    "directory": "escort",
+    "desc": "储备金"
+  },
+  "cash_two": {
+    "name": "cash_two.png",
+    "directory": "escort",
+    "desc": "储备金"
+  },
   "confirm_give": {
     "name": "button_to_npc.png",
     "directory": "props",
@@ -208,5 +223,20 @@
     "name": "system.json",
     "directory": "json",
     "desc": ""
+  },
+  "stay_confirm_rest_button": {
+    "name": "stay_confirm_rest_button.png",
+    "directory": "fight",
+    "desc": "酒肆-我要休息(太小,无法识别,弃用)"
+  },
+  "stay_confirm_rest_button_two": {
+    "name": "stay_confirm_rest_button_two.png",
+    "directory": "fight",
+    "desc": "酒肆-我要休息(太小,无法识别,弃用)"
+  },
+  "stay_dialog": {
+    "name": "stay_dialog.png",
+    "directory": "fight",
+    "desc": "酒肆技能对话框"
   }
 }

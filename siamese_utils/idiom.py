@@ -6,6 +6,7 @@ import numpy
 
 from game_models.source import get_model
 from script_utils.cnOcr import cn_ocr
+from src.utils.log_util import log_queue
 
 jieba.load_userdict(get_model("words.txt", 2))
 
@@ -37,4 +38,5 @@ def get_idiom(img):
         temp.append("断章取义")
     if "虚度光阴" in temp:
         temp.append("蹉跎岁月")
+    log_queue.put(f"弹窗成语识别:{temp}")
     return temp
