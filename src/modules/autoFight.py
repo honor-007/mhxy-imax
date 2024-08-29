@@ -1,29 +1,27 @@
 # -*- coding: gbk -*-
-import threading
-from datetime import datetime
-import time
 import random
-import pywintypes
+import time
+
 import win32gui
+
 import game_models.hoverModel as hm
 from assets.sources import get_source, auto_fight_setting
 from config import hover_list
-from game_models.roleModel import get_role_center
-from script_utils.imageTransform import get_hp_rect, get_mp_rect
-from src.components.hover import hover
-from src.components.status import isFight
-from src.components.gameMouse import game_mouse
-from src.components.InputAutoGui import inputautogui
-from src.components.window import WINDOW_ID
 from script_utils.grabScreen import winShot
+from script_utils.imageTransform import get_hp_rect, get_mp_rect
 from script_utils.loggerConfig import logger
 from script_utils.matchTemplate import match_img, crop_image_data
+from src.components.InputAutoGui import inputautogui
+from src.components.gameMouse import game_mouse
+from src.components.hover import hover
+from src.components.status import isFight
+from src.components.window import WINDOW_ID
 from src.modules.map import click_button
 from src.utils import sound_util
-from src.utils.globalVariable import alarm_stop_event, auto_fight_stop_event, dazuo_stop_event
+from src.utils.globalVariable import auto_fight_stop_event
+from src.utils.img_util import save_fight_normal_check
 from src.utils.log_util import log_queue
 from src.utils.random_util import random_button_coordinate
-from script_utils.cnOcr import cn_ocr
 
 
 class AutoFight:
@@ -31,33 +29,23 @@ class AutoFight:
         self.hwnd = hwnd
         self.name = win32gui.GetWindowText(hwnd)
         self.auto_fight_setting = auto_fight_setting
-        self.is_fighting = False
+        self.is_fighting = True
 
     def __screenshot(self):
         return winShot(self.hwnd)
 
-    def __task(self, fight_type=0, rate=0.85):
-        if not self.__windows_in_screen():
-            return False
-        if fight_type == 0:
-            if hover.normalNotification(rate):
-                logger.info("存在普通弹窗：切割完毕")
-                return True
-        elif fight_type == 1:
-            if hover.rewardNotification(rate):
-                logger.info("存在奖励弹窗：切割完毕")
-                return True
-        return False
-
-    def __if_have_ntification_check(self, rate=0.85):
+    def __if_have_ntification_check(self, rate=0.95):
         if not self.__windows_in_screen():
             log_queue("梦幻西游不在当前窗口,无法进行游戏鼠标移动...")
             return False
         if hover.normalNotification(rate):
+            log_queue.put("检测到普通弹窗")
             return True
         elif hover.rewardNotification(rate):
+            log_queue.put("检测到奖励弹窗1")
             return True
         elif hover.rewardMaskNotification(rate):
+            log_queue.put("检测到奖励弹窗2")
             return True
         else:
             return False
@@ -69,33 +57,45 @@ class AutoFight:
         """
         return win32gui.GetWindowText(win32gui.GetForegroundWindow()) == self.name
 
+    def __auto_click_four_people(self, rate=0.85):
+        # 有弹窗并完成切割返回true 否则false
+        if not self.__if_have_ntification_check(rate):
+            return
+        min_index = hm.model_predict(hover_list)
+        # TODO 计算点击坐标(暂时设置为 识别出的切割图片的中心位置)
+        screen_shot = self.__screenshot()
+        result = match_img(screen_shot, hover_list[min_index], 10, 10, 0.98)
+        if result[3] is None:
+            log_queue.put("匹配失败弹窗点击失败,需要手动处理")
+            save_fight_normal_check(screen_shot)
+            sound_util.playsound()
+            return
+        target_x, target_y = result[3]['result']
+
+        if target_x == 0 and target_y == 0:
+            log_queue.put("匹配失败弹窗点击失败,需要手动处理")
+            save_fight_normal_check(screen_shot)
+            sound_util.playsound()
+        else:
+            log_queue.put(f'根据预测结果,点击坐标为[x：{target_x} < ; y：{target_y}]')
+            game_mouse.move_click(target_x, target_y)
+            time.sleep(0.5)
+            if self.__if_have_ntification_check(rate):
+                log_queue.put("匹配失败弹窗点击失败,需要手动处理")
+                # TODO 收集预测失败的图片
+                save_fight_normal_check(screen_shot)
+                sound_util.playsound()
+
     def __auto_fight_first_step(self, rate=0.85):
         """
-        !!!自动处理弹窗
         :param fight_type:
         :param rate:
         :return:
         """
         if isFight.is_fighting():
-            log_queue.put("战斗中,检查并处理奖励弹窗")
             self.is_fighting = True
-            # 有弹窗并完成切割返回true 否则false
-            if not self.__if_have_ntification_check(rate):
-                return
-            min_index = hm.model_predict(hover_list)
-            # TODO 计算点击坐标(暂时设置为 识别出的切割图片的中心位置)
-            result = match_img(self.__screenshot(), hover_list[min_index], 10, 10, 0.98)
-            if result[3] is None:
-                return
-            target_x, target_y = result[3]['result']
-
-            if target_x == 0 and target_y == 0:
-                log_queue.put("匹配失败弹窗点击失败,需要手动处理")
-                sound_util.playsound()
-            else:
-                log_queue.put(f'根据预测结果,点击坐标为[x：{target_x} < ; y：{target_y}]')
-                game_mouse.move_click(target_x, target_y)
-                time.sleep(0.5)
+            log_queue.put("战斗中,检查并处理弹窗")
+            self.__auto_click_four_people(rate=0.85)
         else:
             # 非战斗中的处理
             # 恢复
@@ -103,72 +103,10 @@ class AutoFight:
                 self.is_fighting = False
                 log_queue.put("战斗结束,检查任务状态...")
                 self.restore()
-                time.sleep(random.randint(1, 15))
-                log_queue.put("打坐回蓝...")
-                inputautogui.press(self.auto_fight_setting['stay'])
-
-    def __auto_click_four_people(self, fight_type=0, rate=0.85):
-        """
-        !!!自动处理弹窗
-        :param fight_type:
-        :param rate:
-        :return:
-        """
-        if isFight.is_fighting():
-            log_queue.put("战斗中,检查并处理奖励弹窗")
-            self.is_fighting = True
-            # 有弹窗并完成切割返回true 否则false
-            if not self.__task(fight_type, rate):
-                return
-            min_index = hm.model_predict(hover_list)
-            result = match_img(self.__screenshot(), hover_list[min_index], 10, 10, 0.98)
-            if result[3] is None:
-                return
-            target_x, target_y = result[3]['result']
-
-            # 利用yolo5 检测出头部
-            xcenter, ycenter = get_role_center(hover_list[min_index])
-            target_x = target_x + xcenter - 45
-            target_y = target_y + ycenter - 70
-
-            log_queue.put(f' 点击坐标为 > x：{target_x} < ; y：{target_y}')
-            if target_x == 0 and target_y == 0:
-                sound_util.playsound()
-                log_queue.put("匹配失败弹窗点击失败,需要手动处理")
-            else:
-                log_queue.put("开始点击弹窗")
-                game_mouse.move_click(target_x, target_y)
-                time.sleep(0.5)
-                if hover.rewardMaskNotification(rate):
-                    min_index = hm.model_predict(hover_list)
-                    result = match_img(self.__screenshot(), hover_list[min_index], 10, 10, 0.98)
-                    if result[3] is None:
-                        return
-                    target_x, target_y = result[3]['result']
-
-                    # 利用yolo5 检测出头部
-                    xcenter, ycenter = get_role_center(hover_list[min_index])
-                    target_x = target_x + xcenter - 45
-                    target_y = target_y + ycenter - 70
-
-                    if target_x == 0 and target_y == 0:
-                        logger.warning('匹配失败弹窗点击失败')
-                    else:
-                        game_mouse.move_click(target_x, target_y)
-                # 点击后还是有弹窗 报警
-                if hover.normalNotification() or hover.rewardNotification() or hover.rewardMaskNotification():
-                    sound_util.playsound()
-                    log_queue.put("匹配失败弹窗点击失败,需要手动处理")
-        else:
-            # 非战斗中的处理
-            # 恢复
-            if self.is_fighting:
-                self.is_fighting = False
-                log_queue.put("战斗结束,检查任务状态...")
-                self.restore()
-                time.sleep(random.randint(1, 15))
-                log_queue.put("打坐回蓝...")
-                inputautogui.press(self.auto_fight_setting['stay'])
+                time.sleep(random.randint(1, 10))
+                if not isFight.is_fighting():
+                    log_queue.put("打坐回蓝...")
+                    inputautogui.press(self.auto_fight_setting['dazuo'])
 
     def __auto_action(self):
         """
@@ -182,11 +120,15 @@ class AutoFight:
                     inputautogui.hotkey('alt', 'a')
                 elif self.auto_fight_setting["character_attack"] == "alt+q":
                     inputautogui.hotkey('alt', 'q')
+                elif self.auto_fight_setting["character_attack"] == "alt+d":
+                    inputautogui.hotkey('alt', 'd')
                 time.sleep(random.randint(0, 5) / 10)
                 if self.auto_fight_setting["bb_attack"] == "alt+a":
                     inputautogui.hotkey('alt', 'a')
                 elif self.auto_fight_setting["bb_attack"] == "alt+q":
                     inputautogui.hotkey('alt', 'q')
+                elif self.auto_fight_setting["bb_attack"] == "alt+d":
+                    inputautogui.hotkey('alt', 'd')
             return True
         return False
 
@@ -254,18 +196,26 @@ class AutoFight:
             self.click_dialog()
             game_mouse.move_right_click(random.randint(973, 1015), 10)
         elif '坐骑酒肆' == self.auto_fight_setting['character_restore_type']:
-            inputautogui.press(self.auto_fight_setting['stay'])
-            click_button("stay_confirm_rest_button")
             game_mouse.locked_client_move(random.randint(500, 700), random.randint(200, 400))
+            inputautogui.press(self.auto_fight_setting['stay'])
+            time.sleep(random.randint(10, 15) / 10)
+            # click_button("stay_confirm_rest_button")
+            target_x = random.randint(215, 255)
+            target_y = random.randint(478, 480)
+            game_mouse.move_click(target_x, target_y, bias=3)
 
     def restore_character_mp_command(self):
         if '右键状态条' == self.auto_fight_setting['character_restore_type']:
             self.click_dialog()
             game_mouse.move_right_click(random.randint(973, 1015), 21)
         elif '坐骑酒肆' == self.auto_fight_setting['character_restore_type']:
-            inputautogui.press(self.auto_fight_setting['stay'])
             game_mouse.locked_client_move(random.randint(500, 700), random.randint(200, 400))
-            click_button("stay_confirm_rest_button")
+            inputautogui.press(self.auto_fight_setting['stay'])
+            time.sleep(random.randint(10, 15) / 10)
+            # click_button("stay_confirm_rest_button")
+            target_x = random.randint(215, 255)
+            target_y = random.randint(478, 480)
+            game_mouse.move_click(target_x, target_y, bias=3)
 
     def restore_bb_hp_command(self):
         if '右键状态条' == self.auto_fight_setting['bb_restore_type']:

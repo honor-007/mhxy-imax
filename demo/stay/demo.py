@@ -1,3 +1,5 @@
+import random
+
 import cv2
 
 from assets.sources import get_source
@@ -10,7 +12,7 @@ def click_button(button_name=None):
     """
     根据sources中的button_name点击对应按钮
     """
-    screen_shot = cv2.imread('test1.png')
+    screen_shot = cv2.imread('test2.png')
 
     # img_obj = cv2.imread(get_source(button_name))
     # cv2.imshow("22",img_obj)
@@ -33,5 +35,16 @@ def click_button(button_name=None):
         logger.warning(f"点击按钮:{button_name}失败")
         return False
 
-for i in range(10):
-    click_button('stay_confirm_rest_button')
+
+# for i in range(10):
+#     click_button('stay_confirm_rest_button')
+
+def stay_dialog():
+    screen_shot = cv2.imread('test2.png')
+    result = match_img(screen_shot, get_source('stay_dialog'), 10, 10, 0.95)[3]
+    left_up = result['rectangle'][0]
+    target_x = left_up[0] + random.randint(30, 80)
+    target_y = left_up[1] + random.randint(111, 116)
+    print(f"target_x:{target_x},target_y:{target_y}")
+
+stay_dialog()

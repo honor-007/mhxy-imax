@@ -238,5 +238,10 @@
     "name": "stay_dialog.png",
     "directory": "fight",
     "desc": "酒肆技能对话框"
+  },
+  "alarm_sound": {
+    "name": "alarm.mp3",
+    "directory": "sound",
+    "desc": "报警声音"
   }
 }

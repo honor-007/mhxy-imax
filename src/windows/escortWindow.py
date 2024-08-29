@@ -8,7 +8,7 @@ from ttkbootstrap import OUTLINE
 from src.components.window import WINDOW_ID
 from src.modules.autoFight import AutoFight
 from src.task.escort import escort_one_time
-from src.utils.globalVariable import escort_stop_event, auto_fight_stop_event,  alarm_stop_event, \
+from src.utils.globalVariable import escort_stop_event, auto_fight_stop_event, alarm_stop_event, \
     stop_escort_event, clear_escort_event
 from assets.sources import *
 from src.utils.log_util import log_queue
@@ -60,7 +60,9 @@ class EscortGui():
         reward_type.bind("<<ComboboxSelected>>", self.on_select_reward_type)  # 绑定事件，当下拉框选项改变时触发
         reward_type.grid(row=2, column=1, padx=2, pady=2, ipadx=0, ipady=0)
 
-        items_character_hp = ('0%', '25%', '50%', '75%', '80%', '90%')
+        items_character_hp = []
+        for i in range(21):
+            items_character_hp.append(str(i * 5) + '%')
         character_hp_threshold = tk.Combobox(self.window, font=font, width=width)
         character_hp_threshold['values'] = items_character_hp
         default_value = escort_setting['character_hp_threshold']
@@ -68,7 +70,9 @@ class EscortGui():
         character_hp_threshold.bind("<<ComboboxSelected>>", self.on_select_character_hp_threshold)  # 绑定事件，当下拉框选项改变时触发
         character_hp_threshold.grid(row=3, column=1, padx=2, pady=2, ipadx=0, ipady=0)
 
-        items_character_mp = ('0%', '25%', '50%', '75%', '80%', '90%')
+        items_character_mp = []
+        for i in range(21):
+            items_character_mp.append(str(i * 5) + '%')
         character_mp_threshold = tk.Combobox(self.window, font=font, width=width)
         character_mp_threshold['values'] = items_character_mp
         default_value = escort_setting['character_mp_threshold']
@@ -92,7 +96,9 @@ class EscortGui():
         stay.bind("<<ComboboxSelected>>", self.on_select_stay)  # 绑定事件，当下拉框选项改变时触发
         stay.grid(row=6, column=1, padx=2, pady=2, ipadx=0, ipady=0)
 
-        items_bb_hp = ('0%', '25%', '50%', '75%', '80%', '90%')
+        items_bb_hp = []
+        for i in range(21):
+            items_bb_hp.append(str(i * 5) + '%')
         bb_hp_threshold = tk.Combobox(self.window, font=font, width=width)
         bb_hp_threshold['values'] = items_bb_hp
         default_value = escort_setting['bb_hp_threshold']
@@ -100,7 +106,9 @@ class EscortGui():
         bb_hp_threshold.bind("<<ComboboxSelected>>", self.on_select_bb_hp_threshold)  # 绑定事件，当下拉框选项改变时触发
         bb_hp_threshold.grid(row=7, column=1, padx=2, pady=2, ipadx=0, ipady=0)
 
-        items_bb_mp = ('0%', '25%', '50%', '75%', '80%', '90%')
+        items_bb_mp = []
+        for i in range(21):
+            items_bb_mp.append(str(i * 5) + '%')
         bb_mp_threshold = tk.Combobox(self.window, font=font, width=width)
         bb_mp_threshold['values'] = items_bb_mp
         default_value = escort_setting['bb_mp_threshold']
@@ -155,12 +163,12 @@ class EscortGui():
         items_dazuo = ('无', 'f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f9')
         dazuo = tk.Combobox(self.window, font=font, width=width)
         dazuo['values'] = items_dazuo
-        default_value = escort_setting['stay']
+        default_value = escort_setting['dazuo']
         dazuo.current(items_dazuo.index(f'{default_value}'))
         dazuo.bind("<<ComboboxSelected>>", self.on_select_dazuo)  # 绑定事件，当下拉框选项改变时触发
         dazuo.grid(row=3, column=3, padx=2, pady=2, ipadx=0, ipady=0)
 
-        items_character_attack = ('无', 'alt+q', 'alt+a')
+        items_character_attack = ('无', 'alt+q', 'alt+a', 'alt+d')
         character_attack = tk.Combobox(self.window, font=font, width=width)
         character_attack['values'] = items_character_attack
         default_value = auto_fight_setting['character_attack']
@@ -168,7 +176,7 @@ class EscortGui():
         character_attack.bind("<<ComboboxSelected>>", self.on_select_character_attack)  # 绑定事件，当下拉框选项改变时触发
         character_attack.grid(row=4, column=3, padx=2, pady=2, ipadx=0, ipady=0)
 
-        items_bb_attack = ('无', 'alt+q', 'alt+a')
+        items_bb_attack = ('无', 'alt+q', 'alt+a', 'alt+d')
         bb_attack = tk.Combobox(self.window, font=font, width=width)
         bb_attack['values'] = items_bb_attack
         default_value = auto_fight_setting['bb_attack']
@@ -245,7 +253,7 @@ class EscortGui():
         print("镖局飞行旗颜色:", event.widget.get())
 
     def on_select_dazuo(self, event):
-        escort_setting['stay'] = event.widget.get()
+        escort_setting['dazuo'] = event.widget.get()
         print("打坐:", event.widget.get())
 
     def on_select_character_attack(self, event):
@@ -255,6 +263,7 @@ class EscortGui():
     def on_select_bb_attack(self, event):
         auto_fight_setting['bb_attack'] = event.widget.get()
         print("bb攻击:", event.widget.get())
+
     def start_escort_task(self):
         print("开始执行任务")
         for key, value in escort_setting.items():

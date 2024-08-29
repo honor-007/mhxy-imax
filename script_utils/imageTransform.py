@@ -141,11 +141,11 @@ def get_hp_rect(img_src, scale=20.0):
 
     # 定义红色的HSV范围
     # 注意：这些值可能需要根据你的图像进行调整
-    lower_red = np.array([0, 79, 60])
-    upper_red = np.array([10, 255, 255])
+    lower_red = np.array([0, 113, 79])
+    upper_red = np.array([24, 255, 255])
     mask1 = cv2.inRange(img_hsv, lower_red, upper_red)
 
-    lower_red = np.array([170, 120, 0])
+    lower_red = np.array([170, 150, 100])
     upper_red = np.array([180, 255, 255])
     mask2 = cv2.inRange(img_hsv, lower_red, upper_red)
 
