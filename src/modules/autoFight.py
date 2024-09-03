@@ -44,9 +44,9 @@ class AutoFight:
         elif hover.rewardNotification(rate):
             log_queue.put("¼ì²âµ½½±Àøµ¯´°1")
             return True
-        elif hover.rewardMaskNotification(rate):
-            log_queue.put("¼ì²âµ½½±Àøµ¯´°2")
-            return True
+        # elif hover.rewardMaskNotification(rate):
+        #     log_queue.put("¼ì²âµ½½±Àøµ¯´°2")
+        #     return True
         else:
             return False
 
@@ -103,10 +103,11 @@ class AutoFight:
                 self.is_fighting = False
                 log_queue.put("Õ½¶·½áÊø,¼ì²éÈÎÎñ×´Ì¬...")
                 self.restore()
-                time.sleep(random.randint(1, 10))
-                if not isFight.is_fighting():
-                    log_queue.put("´ò×ø»ØÀ¶...")
-                    inputautogui.press(self.auto_fight_setting['dazuo'])
+                if 'ÎÞ'!=self.auto_fight_setting['dazuo']:
+                    time.sleep(random.randint(1, 10))
+                    if not isFight.is_fighting():
+                        log_queue.put("´ò×ø»ØÀ¶...")
+                        inputautogui.press(self.auto_fight_setting['dazuo'])
 
     def __auto_action(self):
         """
@@ -199,7 +200,6 @@ class AutoFight:
             game_mouse.locked_client_move(random.randint(500, 700), random.randint(200, 400))
             inputautogui.press(self.auto_fight_setting['stay'])
             time.sleep(random.randint(10, 15) / 10)
-            # click_button("stay_confirm_rest_button")
             target_x = random.randint(215, 255)
             target_y = random.randint(478, 480)
             game_mouse.move_click(target_x, target_y, bias=3)
@@ -212,7 +212,6 @@ class AutoFight:
             game_mouse.locked_client_move(random.randint(500, 700), random.randint(200, 400))
             inputautogui.press(self.auto_fight_setting['stay'])
             time.sleep(random.randint(10, 15) / 10)
-            # click_button("stay_confirm_rest_button")
             target_x = random.randint(215, 255)
             target_y = random.randint(478, 480)
             game_mouse.move_click(target_x, target_y, bias=3)

@@ -25,7 +25,7 @@ def rewardNotification(rate=0.9):
         # 分割(请点击朝向你的人物)图像
         mutil_crop(screenshot, hover_list, (x - 350, y + 15), (x + 10, y + 155))
         # TODO 收集训练集用 正式环境删除
-        save_fight_reward_check(screenshot)
+        # save_fight_reward_check(screenshot)
         return True
     # 5. 若List outs不为空
     if outs:
@@ -65,7 +65,7 @@ def normalNotification(rate=0.9):
         mutil_crop(screenshot, hover_list, (x - 230, y + 2), (x + 120, y + 142))
         # mutil_crop(screenshot, hover_list, (x - 256, y + 22), (x + 146, y + 122))
         # TODO 收集训练集用 正式环境删除
-        save_fight_normal_check(screenshot)
+        # save_fight_normal_check(screenshot)
         return True
     if outs:
         for out in outs:
@@ -79,7 +79,7 @@ def normalNotification(rate=0.9):
                 x, y = int(x), int(y)
                 mutil_crop(screenshot, hover_list, (x, y), (x + 360, y + 140))
                 # TODO 收集训练集用 正式环境删除
-                save_fight_normal_check(screenshot)
+                # save_fight_normal_check(screenshot)
                 return True
     return False
 

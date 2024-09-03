@@ -1,7 +1,7 @@
 {
     "character_id": "159753",
-    "character_hp_threshold": "75%",
-    "character_mp_threshold": "25%",
+    "character_hp_threshold": "70%",
+    "character_mp_threshold": "10%",
     "character_restore_type": "坐骑酒肆",
     "bb_hp_threshold": "0%",
     "bb_mp_threshold": "0%",

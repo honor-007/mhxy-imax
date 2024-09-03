@@ -128,7 +128,7 @@ class AutoFightGui():
         character_attack['values'] = items_character_attack
         default_value = auto_fight_setting['character_attack']
         character_attack.current(items_character_attack.index(f'{default_value}'))
-        character_attack.bind("<<ComboboxSelected>>", self.on_select_bb_attack)  # 绑定事件，当下拉框选项改变时触发
+        character_attack.bind("<<ComboboxSelected>>", self.on_select_character_attack)  # 绑定事件，当下拉框选项改变时触发
         character_attack.grid(row=1, column=3, padx=2, pady=2, ipadx=0, ipady=0)
 
         items_bb_attack = ('无', 'alt+q', 'alt+a', 'alt+d')
