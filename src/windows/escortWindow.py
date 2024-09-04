@@ -6,7 +6,7 @@ from ttkbootstrap import OUTLINE
 # from ttkbootstrap import *
 
 from src.components.window import WINDOW_ID
-from src.modules.autoFight import AutoFight
+from src.task.autoFight import AutoFight
 from src.task.escort import escort_one_time
 from src.utils.globalVariable import escort_stop_event, auto_fight_stop_event, alarm_stop_event, \
     stop_escort_event, clear_escort_event
@@ -149,10 +149,8 @@ class EscortGui():
         frequency.bind("<<ComboboxSelected>>", self.on_select_frequency)  # 绑定事件，当下拉框选项改变时触发
         frequency.grid(row=1, column=3, padx=2, pady=2, ipadx=0, ipady=0)
         items_flag_type = (
-            '红色合成旗', '黄色合成旗', '绿色合成旗', '白色合成旗', '紫色合成旗', '蓝色合成旗', '红色导标旗',
-            '黄色导标旗',
-            '绿色导标旗',
-            '白色导标旗', '紫色导标旗', '蓝色导标旗',)
+            '红色合成旗', '黄色合成旗', '绿色合成旗', '白色合成旗', '紫色合成旗', '蓝色合成旗',
+            '红色导标旗', '黄色导标旗', '绿色导标旗', '白色导标旗', '紫色导标旗', '蓝色导标旗')
         flag_type = tk.Combobox(self.window, font=font, width=width)
         flag_type['values'] = items_flag_type
         default_value = escort_setting['flag_type']

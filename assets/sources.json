@@ -99,6 +99,11 @@
     "directory": "map",
     "desc": "长安地图"
   },
+  "single_flag_dialog": {
+    "name": "single_flag_dialog.png",
+    "directory": "map",
+    "desc": "导标旗对话框"
+  },
   "map_red_point": {
     "name": "flag_red_point.png",
     "directory": "map",
@@ -221,6 +226,11 @@
   },
   "system_setting_json": {
     "name": "system.json",
+    "directory": "json",
+    "desc": ""
+  },
+  "activate_setting_json": {
+    "name": "activate.json",
     "directory": "json",
     "desc": ""
   },

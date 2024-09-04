@@ -22,7 +22,6 @@ TaskNpc = "郑镖头"
 TaskType = "押镖"
 TaskLocation = "长风镖局"
 
-
 def fly_to(location, retry=3):
     """
     进入镖局内场景
@@ -43,6 +42,7 @@ def fly_to(location, retry=3):
     # 找镖局的飞行旗道具 例如:黄色飞行旗
     res = PropsFunction.findProps(escort_setting['flag_type'])
     if not res:
+        log_queue.put('未找到设置的飞行旗道具,开始重新尝试...')
         return fly_to(location)
     if escort_stop_event.is_set():
         return
@@ -56,6 +56,7 @@ def fly_to(location, retry=3):
         result = match_img(screenshot, get_source('map_changan'), 10, 10, 0.90)
         if result[3] is None:
             log_queue.put("未匹配到长安城地图")
+            fly_to(location)
             return
         x_compensation = result[3]['rectangle'][0][0]
         y_compensation = result[3]['rectangle'][0][1]
@@ -75,7 +76,19 @@ def fly_to(location, retry=3):
     else:
         # 使用导标旗传送
         # TODO move下图片还没有
-        click_result_2 = click_button_v2('single_flag_yes_i_will_go')
+        result = match_img(screenshot, get_source('single_flag_dialog'), 10, 10, 0.90)
+        if result[3] is None:
+            log_queue.put("未匹配到导标旗对话框")
+            fly_to(location)
+            return
+        x_compensation = result[3]['rectangle'][0][0]
+        y_compensation = result[3]['rectangle'][0][1]
+        # '送我去那里'按钮的坐标
+        x = random.randint(38, 95) + x_compensation
+        y = 50 + y_compensation
+        if escort_stop_event.is_set():
+            return
+        game_mouse.move_click(x, y, bias=3)
 
     PropsFunction.closeProps()
     time.sleep(random.randint(5, 10) / 10)

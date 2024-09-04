@@ -6,12 +6,12 @@
   "紫色合成旗": "multiple_purple_flag.png",
   "蓝色合成旗": "multiple_blue_flag.png",
 
-  "红色导标旗": "red_single_flag.png",
-  "黄色导标旗": "yellow_single_flag.png",
-  "绿色导标旗": "green_single_flag.png",
-  "白色导标旗": "white_single_flag.png",
-  "紫色导标旗": "purple_single_flag.png",
-  "蓝色导标旗": "bule_single_flag.png",
+  "红色导标旗": "single_red_flag.png",
+  "黄色导标旗": "single_yellow_flag.png",
+  "绿色导标旗": "single_green_flag.png",
+  "白色导标旗": "single_white_flag.png",
+  "紫色导标旗": "single_purple_flag.png",
+  "蓝色导标旗": "single_blue_flag.png",
 
   "四级镖银": "biaoying.png",
   "镖银包裹_4": "biaoying_4.png",

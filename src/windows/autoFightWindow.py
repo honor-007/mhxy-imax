@@ -1,4 +1,3 @@
-import threading
 import time
 
 from assets.sources import windows_json, auto_fight_setting, write_json
@@ -6,7 +5,7 @@ import ttkbootstrap as tk
 from ttkbootstrap.constants import *
 
 from src.components.window import WINDOW_ID
-from src.modules.autoFight import AutoFight
+from src.task.autoFight import AutoFight
 from src.utils.globalVariable import *
 from src.utils.log_util import log_queue
 

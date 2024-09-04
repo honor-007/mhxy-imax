@@ -14,9 +14,12 @@ def __screenshot():
 
 
 def GetMapName() -> str:
-    screenshot = cv2.imread('lingtaigong.png')
+    screenshot = cv2.imread('dizangwangfu.png')
     img = crop_image_data(screenshot, left_up=(18, 24),
                           right_down=(140, 42))
+    cv2.imshow("22", img)
+    cv2.waitKey()
+
     raw_text = cn_ocr.ocr_for_single_line(hsvFilterLocationWhite(img, mask=True))['text']
     chinese_text = get_chinese_text(raw_text)
     location_name_list = [location for location in location_data.keys()] + [location for location in
