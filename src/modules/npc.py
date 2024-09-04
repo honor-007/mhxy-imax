@@ -13,6 +13,7 @@ from src.components.window import WINDOW_ID
 from script_utils.grabScreen import winShot
 from script_utils.matchTemplate import match_img
 from src.modules.map import MapTask
+from src.utils.log_util import log_queue
 
 
 class NPC:
@@ -26,6 +27,12 @@ class NPC:
         return win32gui.GetWindowText(win32gui.GetForegroundWindow()) == win32gui.GetWindowText(self.hwnd)
 
     def findNpc(self, name, rate=0.95):
+        """
+        在当前页面找到指定npc的坐标
+        :param name:
+        :param rate:
+        :return:
+        """
         inputautogui.press("f9")
         time.sleep(random.random())
         npc_info = npc_data[name]
@@ -78,21 +85,16 @@ class NPC:
         for template in location_flag:
             template = os.path.join(basedir, 'npc', template)
             inputautogui.press('f9')
-            # time.sleep(0.5)
+            time.sleep(0.5)
             result = match_img(self.__screenshot(), template, 10, 10)
             logger.info("close to {}".format(name))
             if result[3]:
                 x, y = result[3]['result']
                 if name == "郑镖头":
-                    # r = random.randrange(80, 100, 5)
-                    # bias = random.randrange(0, r, 5) * random.choice([-1, 1])
-                    # abs_x_bias = math.sqrt(r * r - bias * bias)
-                    # x_bias = abs_x_bias * random.choice([-1, 1])
-                    # target_x = x + random.randint(0, 10) * random.choice([-1, 1])
-                    # target_y = y + random.randint(5, 20)
-                    logger.info(f"最后一次向郑镖头靠近,({x},{y})")
-                    game_mouse.move(x, y, bias=20)
-                    # game_mouse.move_click(random.randint(800, 950), random.randint(400, 500), bias=20)
+                    target_y = y + random.randint(0, 15) * random.choice([-1, 1])
+                    target_x = x + random.randint(45, 60) * random.choice([-1, 1])
+                    log_queue.put(f"进入长风镖局后第二次向郑镖头移动,({target_x},{target_y})")
+                    game_mouse.move_click(target_x, target_y, bias=5)
                 else:
                     game_mouse.move_click(x, y, bias=10)
                 time.sleep(5)
