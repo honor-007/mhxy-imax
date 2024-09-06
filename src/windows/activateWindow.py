@@ -136,4 +136,3 @@ activateGui = ActivateGui()
 
 if __name__ == "__main__":
     activateGui.start_activate_window()
-    # applicationGui.start_application_window()

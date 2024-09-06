@@ -94,6 +94,7 @@ class AppilcationGui():
 
     def on_close_application_window(self):
         stop_event_all_set()
+        log_queue.put("窗口关闭...")
         logger.info("application窗口关闭...")
         self.root.destroy()
 
