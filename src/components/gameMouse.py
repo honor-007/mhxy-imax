@@ -15,8 +15,7 @@ from script_utils.loggerConfig import logger
 from script_utils.matchTemplate import match_img
 from src.components.InputAutoGui import inputautogui
 from src.components.window import WINDOW_ID
-from src.utils.globalVariable import mouse_stop_event
-from src.utils.log_util import log_queue
+from src.utils.globalVariable import mouse_stop_event, auto_fight_stop_event, module_task_stop_event, log_queue
 
 
 def start_point(x_min, y_min, x_max, y_max):
@@ -119,9 +118,10 @@ class Mouse:
         :param y:
         :return:
         """
-        if not self.__if_windows_in_screen():
-            log_queue("梦幻西游不在当前窗口,无法进行游戏鼠标移动...")
-            return
+        # if not self.__if_windows_in_screen():
+        #     log_queue("梦幻西游不在当前窗口,无法进行游戏鼠标移动...")
+        #     return
+        self.__if_windows_in_screen()
         # 将窗口坐标转换为屏幕坐标
         x, y = win32gui.ClientToScreen(self.hwnd, (int(x), int(y)))
         logger.info(f"开始移动鼠标到屏幕({x},{y})")
@@ -131,9 +131,10 @@ class Mouse:
 
     @locked_mouse
     def locked_client_move(self, x, y):
-        if not self.__if_windows_in_screen():
-            log_queue("梦幻西游不在当前窗口,无法进行游戏鼠标移动...")
-            return
+        # if not self.__if_windows_in_screen():
+        #     log_queue("梦幻西游不在当前窗口,无法进行游戏鼠标移动...")
+        #     return
+        self.__if_windows_in_screen()
         x, y = win32gui.ClientToScreen(self.hwnd, (int(x), int(y)))
         logger.info(f"开始移动鼠标到屏幕({x},{y})")
         inputautogui.move_to(x, y)
@@ -230,10 +231,11 @@ class Mouse:
                 return 0
             kmbox_x, kmbox_y = pyautogui.position()
             # logger.info(f"开始循环逼近目标点({x},{y}),当前游戏坐标({x_moved},{y_moved}),当前鼠标坐标({kmbox_x},{kmbox_y})")
-            if not self.__if_windows_in_screen():
-                logger.info(
-                    f"鼠标循环逼近时,mhxy窗口不在当前页面,退出操作")
-                return
+            # if not self.__if_windows_in_screen():
+            #     logger.info(
+            #         f"鼠标循环逼近时,mhxy窗口不在当前页面,退出操作")
+            #     return
+            self.__if_windows_in_screen()
             # 如果鼠标不在窗口内了,需要先将鼠标移动到最后一次游戏鼠标的位置,然后再执行__go_game_rectangle()方法
             if not self.__mouse_in_window():
                 # result = self.__client_move(start_point(200, 900, 200, 600)[0], start_point(200, 900, 200, 600)[1])
@@ -259,8 +261,24 @@ class Mouse:
                 return 1
         return 0
 
+    # def __if_windows_in_screen(self):
+    #     return win32gui.GetWindowText(win32gui.GetForegroundWindow()) == self.name
+
     def __if_windows_in_screen(self):
-        return win32gui.GetWindowText(win32gui.GetForegroundWindow()) == self.name
+        """
+        判断当前窗口是否是mhxy的窗口
+        :return:
+        """
+        if module_task_stop_event.is_set():
+            module_task_stop_event.clear()
+            return
+        if win32gui.GetWindowText(win32gui.GetForegroundWindow()) == self.name:
+            return
+        else:
+            log_queue("梦幻西游不在当前窗口,请将梦幻西游窗口打开为当前窗口...")
+            time.sleep(1)
+            self.__if_windows_in_screen()
+            return
 
     def __left_click(self):
         return inputautogui.left_click()

@@ -6,7 +6,7 @@ import numpy
 
 from game_models.source import get_model
 from script_utils.cnOcr import cn_ocr
-from src.utils.log_util import log_queue
+from src.utils.globalVariable import log_queue
 
 jieba.load_userdict(get_model("words.txt", 2))
 

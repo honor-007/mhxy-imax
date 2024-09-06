@@ -15,9 +15,8 @@ from src.components.status import isFight, isMoved
 from src.components.InputAutoGui import inputautogui
 from src.components.window import WINDOW_ID, set_parent_foreground
 from src.components.gameMouse import game_mouse
-from src.utils.log_util import log_queue
 from src.utils.random_util import random_button_coordinate
-from src.utils.globalVariable import task_stop_event
+from src.utils.globalVariable import task_stop_event, log_queue, module_task_stop_event
 
 
 def click_button(button_name=None):

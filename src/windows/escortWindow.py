@@ -9,9 +9,8 @@ from src.components.window import WINDOW_ID
 from src.task.autoFight import AutoFight
 from src.task.escort import escort_one_time
 from src.utils.globalVariable import escort_stop_event, auto_fight_stop_event, alarm_stop_event, \
-    stop_escort_event, clear_escort_event
+    stop_escort_event, clear_escort_event, log_queue
 from assets.sources import *
-from src.utils.log_util import log_queue
 
 LOG_LINE_NUM = 0
 

@@ -1,4 +1,5 @@
 import cv2
+import pywintypes
 import win32api
 import win32con
 import win32gui
@@ -6,6 +7,7 @@ import win32ui
 import numpy as np
 
 from src.components.window import SCREEN_SCALE
+from src.utils.globalVariable import log_queue
 
 
 def grab_screen(region=None):
@@ -52,5 +54,12 @@ def winShot(hwnd):
     根据窗口句柄截取窗口视图
     :param hwnd: 窗口句柄 一个整数
     """
-    region = win32gui.GetWindowRect(hwnd)
-    return grab_screen(region=region)
+    # region = win32gui.GetWindowRect(hwnd)
+    # return grab_screen(region=region)
+    try:
+        region = win32gui.GetWindowRect(hwnd)
+    except Exception as e:
+        log_queue.put(f"截取mhxy游戏窗口失败,请确认游戏窗口位于最前端")
+        print(f"截取mhxy游戏窗口失败: {e}")
+    else:
+        return grab_screen(region=region)

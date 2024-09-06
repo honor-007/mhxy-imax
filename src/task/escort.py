@@ -14,9 +14,8 @@ from src.modules.map import MapTask, click_button, click_button_v2
 from src.modules.npc import NpcTask
 from src.modules.props import PropsFunction
 from src.modules.task import get_task_info, escort_npc
-from src.utils.globalVariable import escort_stop_event
+from src.utils.globalVariable import escort_stop_event, log_queue
 from assets.sources import *
-from src.utils.log_util import log_queue
 
 TaskNpc = "郑镖头"
 TaskType = "押镖"

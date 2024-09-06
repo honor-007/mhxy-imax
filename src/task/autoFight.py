@@ -2,6 +2,7 @@
 import random
 import time
 
+import cv2
 import win32gui
 
 import game_models.hoverModel as hm
@@ -18,9 +19,8 @@ from src.components.status import isFight
 from src.components.window import WINDOW_ID
 from src.modules.map import click_button
 from src.utils import sound_util
-from src.utils.globalVariable import auto_fight_stop_event
+from src.utils.globalVariable import auto_fight_stop_event, module_task_stop_event, log_queue
 from src.utils.img_util import save_fight_normal_check
-from src.utils.log_util import log_queue
 from src.utils.random_util import random_button_coordinate
 
 
@@ -35,9 +35,10 @@ class AutoFight:
         return winShot(self.hwnd)
 
     def __if_have_ntification_check(self, rate=0.95):
-        if not self.__windows_in_screen():
-            log_queue("梦幻西游不在当前窗口,无法进行游戏鼠标移动...")
-            return False
+        # if not self.__windows_in_screen():
+        #     log_queue("梦幻西游不在当前窗口,无法进行游戏鼠标移动...")
+        #     return False
+        self.__if_windows_in_screen()
         if hover.normalNotification(rate):
             log_queue.put("检测到普通弹窗")
             return True
@@ -50,12 +51,28 @@ class AutoFight:
         else:
             return False
 
-    def __windows_in_screen(self):
+    # def __windows_in_screen(self):
+    #     """
+    #     判断当前窗口是否是mhxy的窗口
+    #     :return:
+    #     """
+    #     return win32gui.GetWindowText(win32gui.GetForegroundWindow()) == self.name
+
+    def __if_windows_in_screen(self):
         """
         判断当前窗口是否是mhxy的窗口
         :return:
         """
-        return win32gui.GetWindowText(win32gui.GetForegroundWindow()) == self.name
+        if module_task_stop_event.is_set():
+            module_task_stop_event.clear()
+            return
+        if win32gui.GetWindowText(win32gui.GetForegroundWindow()) == self.name:
+            return
+        else:
+            log_queue("梦幻西游不在当前窗口,请将梦幻西游窗口打开为当前窗口...")
+            time.sleep(1)
+            self.__if_windows_in_screen()
+            return
 
     def __auto_click_four_people(self, rate=0.85):
         # 有弹窗并完成切割返回true 否则false
@@ -103,7 +120,7 @@ class AutoFight:
                 self.is_fighting = False
                 log_queue.put("战斗结束,检查任务状态...")
                 self.restore()
-                if '无'!=self.auto_fight_setting['dazuo']:
+                if '无' != self.auto_fight_setting['dazuo']:
                     time.sleep(random.randint(1, 10))
                     if not isFight.is_fighting():
                         log_queue.put("打坐回蓝...")
@@ -138,7 +155,7 @@ class AutoFight:
         img = self.__screenshot()
         state_width = 50
         # 截取人物状态栏
-        character_img = crop_image_data(img, (955, 0), (1020, 50))
+        character_img = crop_image_data(img, (955, 5), (1020, 50))
 
         # x, y, w, h = get_hp_rect(character_img)
         result = get_hp_rect(character_img)
@@ -166,7 +183,7 @@ class AutoFight:
         else:
             log_queue.put("未读取到人物mp,不做操作")
 
-        bb_img = crop_image_data(img, (845, 0), (900, 50))
+        bb_img = crop_image_data(img, (845, 5), (900, 38))
         result = get_hp_rect(bb_img)
         if result is not None and result[2] > 0:
             log_queue.put("宠物hp x:{}, y:{}, w:{}, h:{}".format(result[0], result[1], result[2], result[3]))

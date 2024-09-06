@@ -13,7 +13,10 @@
   "紫色导标旗": "single_purple_flag.png",
   "蓝色导标旗": "single_blue_flag.png",
 
-  "四级镖银": "biaoying.png",
-  "镖银包裹_4": "biaoying_4.png",
+  "镖银包裹_1": "biaoyin_1.png",
+  "镖银包裹_2": "biaoyin_2.png",
+  "镖银包裹_3": "biaoyin_3.png",
+  "镖银包裹_4": "biaoyin_4.png",
+
   "确定给予": "button_to_npc.png"
 }

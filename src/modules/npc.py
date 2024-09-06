@@ -13,7 +13,7 @@ from src.components.window import WINDOW_ID
 from script_utils.grabScreen import winShot
 from script_utils.matchTemplate import match_img
 from src.modules.map import MapTask
-from src.utils.log_util import log_queue
+from src.utils.globalVariable import log_queue
 
 
 class NPC:

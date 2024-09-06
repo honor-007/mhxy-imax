@@ -7,7 +7,6 @@ from ttkbootstrap.constants import *
 from src.components.window import WINDOW_ID
 from src.task.autoFight import AutoFight
 from src.utils.globalVariable import *
-from src.utils.log_util import log_queue
 
 
 class AutoFightGui():

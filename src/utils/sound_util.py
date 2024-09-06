@@ -3,8 +3,7 @@ import time
 import pygame
 
 from assets.sources import get_source
-from src.utils.globalVariable import alarm_stop_event
-from src.utils.log_util import log_queue
+from src.utils.globalVariable import alarm_stop_event, log_queue
 
 
 def playsound():

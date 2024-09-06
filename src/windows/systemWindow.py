@@ -5,7 +5,7 @@ from ttkbootstrap.dialogs import Messagebox
 from ttkbootstrap.tooltip import ToolTip
 
 from assets.sources import system_setting, windows_json, write_json
-from src.utils.log_util import log_queue
+from src.utils.globalVariable import log_queue
 
 
 class SystemGui():

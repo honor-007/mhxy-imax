@@ -1,6 +1,9 @@
 import threading
+from queue import Queue
 
-from src.utils.log_util import log_stop_event
+log_queue = Queue(maxsize=10)
+
+log_stop_event = threading.Event()
 
 task_stop_event = threading.Event()
 

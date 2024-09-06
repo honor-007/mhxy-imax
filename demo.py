@@ -1,46 +1,32 @@
-import os
+import threading
 import time
+from tkinter import *
 
-import cv2
+import win32gui
 
-from assets.sources import props_data, get_source, location_data, location_name_supplement_data
-from script_utils.cnOcr import cn_ocr, get_chinese_text, get_closed_string
-from script_utils.imageTransform import hsvFilterLocationWhite
-from script_utils.matchTemplate import match_img, crop_image_data
-from src.modules.props import PropsFunction
+from src.utils.globalVariable import auto_fight_stop_event
 
 
-# time.sleep(2)
-# res = PropsFunction.findProps('白色导标旗')
+def __if_windows_in_screen():
+    """
+    判断当前窗口是否是mhxy的窗口
+    :return:
+    """
+    if auto_fight_stop_event.is_set():
+        auto_fight_stop_event.clear()
+        return
+    if win32gui.GetWindowText(win32gui.GetForegroundWindow()) == 'menghuanxiyou':
+        return
+    else:
+        print("屏幕不在当前桌面")
+        time.sleep(1)
+        __if_windows_in_screen()
+        return
 
-# basedir = os.path.abspath(os.path.dirname(__file__))
-# template = os.path.join(basedir, 'assets\\props', props_data['白色导标旗'])
-# result = match_img('test.png', template, 10, 10, 0.95)
-# if result[3] is None:
-#     print("none")
-# else:
-#     print(result[3]['result'])
+def stop():
+    time.sleep(3)
+    auto_fight_stop_event.set()
 
-
-# result = match_img('test2.png', get_source('single_flag_dialog'), 10, 10, 0.90)
-# if result[3] is None:
-#     print("none")
-# else:
-#     print(result[3]['result'])
-
-
-def GetMapName(self) -> str:
-    screenshot = cv2.imread('test3.png')
-    img = crop_image_data(screenshot, left_up=(18, 24),
-                          right_down=(140, 42))
-
-    cv2.imshow("22",img)
-    raw_text = cn_ocr.ocr_for_single_line(hsvFilterLocationWhite(img, mask=True))['text']
-    chinese_text = get_chinese_text(raw_text)
-    location_name_list = [location for location in location_data.keys()] + [location for location in
-                                                                            location_name_supplement_data]
-    return get_closed_string(chinese_text, location_name_list)
-
-
-name = GetMapName()
-print(name)
+auto_fight_thread = threading.Thread(target=stop)
+auto_fight_thread.start()
+__if_windows_in_screen()
