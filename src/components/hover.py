@@ -5,9 +5,6 @@ from script_utils.grabScreen import winShot
 from script_utils.imageTransform import hsvFilterWordWhite, mutil_crop
 from script_utils.matchTemplate import match_img
 from src.components.window import WINDOW_ID
-from src.utils.globalVariable import hover_image_save_path
-from src.utils.img_util import save_image, save_fight_normal_check, save_fight_reward_check
-
 
 class Hover:
     """
@@ -32,8 +29,6 @@ class Hover:
             x, y = result[3]['rectangle'][3]
             # 分割(请点击朝向你的人物)图像
             mutil_crop(screenshot, hover_list, (x - 350, y + 15), (x + 10, y + 155))
-            # TODO 收集训练集用 正式环境删除
-            # save_fight_reward_check(screenshot)
             return True
         # 5. 若List outs不为空
         if outs:
@@ -48,8 +43,6 @@ class Hover:
                     x, y = out['position'][3]
                     x, y = int(x), int(y)
                     mutil_crop(screenshot, hover_list, (x, y), (x + 360, y + 140))
-                    # TODO 收集训练集用 正式环境删除
-                    # save_fight_reward_check(screenshot)
                     return True
         return False
 
@@ -66,8 +59,6 @@ class Hover:
             x, y = result[3]['rectangle'][3]
             # mutil_crop(screenshot, hover_list, (x - 350, y + 15), (x + 10, y + 155))
             mutil_crop(screenshot, hover_list, (x - 230, y + 2), (x + 120, y + 142))
-            # TODO 收集训练集用 正式环境删除
-            # save_fight_normal_check(screenshot)
             return True
         if outs:
             for out in outs:
@@ -80,8 +71,6 @@ class Hover:
                     x, y = out['position'][3]
                     x, y = int(x), int(y)
                     mutil_crop(screenshot, hover_list, (x, y), (x + 360, y + 140))
-                    # TODO 收集训练集用 正式环境删除
-                    # save_fight_normal_check(screenshot)
                     return True
         return False
 
@@ -97,8 +86,6 @@ class Hover:
         if result[3] is not None:
             x, y = result[3]['rectangle'][3]
             mutil_crop(screenshot, hover_list, (x - 350, y + 15), (x + 10, y + 155))
-            # TODO 收集训练集用 正式环境删除
-            # save_image(screenshot, hover_image_save_path)
             return True
         if outs:
             for out in outs:
@@ -112,8 +99,6 @@ class Hover:
                     x, y = out['position'][3]
                     x, y = int(x), int(y)
                     mutil_crop(screenshot, hover_list, (x, y), (x + 360, y + 140))
-                    # TODO 收集训练集用 正式环境删除
-                    # save_image(screenshot, hover_image_save_path)
                     return True
         return False
 

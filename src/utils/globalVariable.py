@@ -20,9 +20,6 @@ mouse_stop_event = threading.Event()
 # 任务线程标志
 module_task_stop_event = threading.Event()
 
-hover_image_save_path = r'E:\temp\hover'
-check_image_save_path = r'E:\temp\check'
-
 
 def stop_event_all_set():
     log_stop_event.set()
