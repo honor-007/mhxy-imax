@@ -1,12 +1,14 @@
 import time
 
-from assets.sources import windows_json, auto_fight_setting, write_json
 import ttkbootstrap as tk
 from ttkbootstrap.constants import *
+from ttkbootstrap.dialogs.dialogs import Messagebox
 
+from assets.sources import windows_json, auto_fight_setting, write_json, system_setting
 from src.components.window import WINDOW_ID
 from src.task.autoFight import AutoFight
 from src.utils.globalVariable import *
+from src.utils.other_util import init_kmbox
 
 
 class AutoFightGui():
@@ -204,19 +206,27 @@ class AutoFightGui():
         print("bb攻击:", event.widget.get())
 
     def start_auto_fight_task(self):
-        print("开始执行任务")
+        log_queue.put("开始执行任务...")
         for key, value in auto_fight_setting.items():
             if value is None:
-                log_queue.put("{}设置内容有缺失,无法启动(不使用坐骑技能请随便设置,不可为空)".format(key))
-                print("{}设置内容有缺失,无法启动(不使用坐骑技能请随便设置,不可为空)".format(key))
+                Messagebox.show_error(title='内容缺失',
+                                      message=f'{key}设置内容有缺失,无法启动(不使用坐骑技能请随便设置,不可为空')
                 return
+
+
+
+        log_queue.put('开始连接kmbox键鼠...')
+        if system_setting['interactor'] == '驱动键鼠':
+            if not init_kmbox():
+                return
+
         clear_auto_fight_event()
         self.auto_fight_thread = threading.Thread(target=self.auto_fight_task)
         self.auto_fight_thread.start()
 
         self.stop_button.config(state='normal')  # 启用停止按钮
         self.start_button.config(state='disabled')  # 禁用开始按钮
-        print("自动战斗停止...")
+        log_queue.put("自动战斗停止...")
 
     def end_auto_fight_task(self):
         stop_auto_fight_event()
@@ -238,6 +248,8 @@ class AutoFightGui():
         for i in range(5):
             log_queue.put(f"自动战斗脚本将在{5 - i}s后启动,请保持梦幻西游窗口在当前页面")
             time.sleep(1)
+            if auto_fight_stop_event.is_set():
+                return
 
         log_queue.put("正在执行自动战斗...")
         auto_fight_task = AutoFight(WINDOW_ID, auto_fight_setting)

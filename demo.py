@@ -1,32 +1,21 @@
-import threading
-import time
-from tkinter import *
+import subprocess
 
-import win32gui
+def check_ping(ip_address):
+    # 使用ping命令检查IP是否可达
+    command = ['ping', '-n', '1', ip_address]  # 在Linux/MacOS上使用'-c'参数，在Windows上使用'-n'参数
+    try:
+        # 执行ping命令
+        subprocess.run(command, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        # 如果ping成功，则返回True
+        return True
+    except subprocess.CalledProcessError:
+        # 如果ping失败，则返回False
+        return False
 
-from src.utils.globalVariable import auto_fight_stop_event
+# 示例用法
+ip_address = '192.168.2.186'
+if check_ping(ip_address):
+    print(f"{ip_address} is reachable.")
+else:
+    print(f"{ip_address} is not reachable.")
 
-
-def __if_windows_in_screen():
-    """
-    判断当前窗口是否是mhxy的窗口
-    :return:
-    """
-    if auto_fight_stop_event.is_set():
-        auto_fight_stop_event.clear()
-        return
-    if win32gui.GetWindowText(win32gui.GetForegroundWindow()) == 'menghuanxiyou':
-        return
-    else:
-        print("屏幕不在当前桌面")
-        time.sleep(1)
-        __if_windows_in_screen()
-        return
-
-def stop():
-    time.sleep(3)
-    auto_fight_stop_event.set()
-
-auto_fight_thread = threading.Thread(target=stop)
-auto_fight_thread.start()
-__if_windows_in_screen()

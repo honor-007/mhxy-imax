@@ -6,6 +6,7 @@ from ttkbootstrap.tooltip import ToolTip
 
 from assets.sources import system_setting, windows_json, write_json
 from src.utils.globalVariable import log_queue
+from src.utils.other_util import init_kmbox, check_ping
 
 
 class SystemGui():
@@ -67,6 +68,7 @@ class SystemGui():
         self.system_warning_label = tk.Label(self.window, text="注意:修改配置后,需要点击保存,然后重启才能生效",
                                              bootstyle="danger")
         self.system_warning_label.grid(row=12, column=0, padx=2, pady=10, ipadx=0, ipady=0, columnspan=3)
+
     def on_select_interactor(self, event):
         system_setting['interactor'] = event.widget.get()
         print("gui交互方式:", event.widget.get())
@@ -98,11 +100,16 @@ class SystemGui():
     def save_system_setting(self):
         print("保存系统设置")
         log_queue.put("保存系统设置")
-        write_json(system_setting, 'escort_setting_json')
+        write_json(system_setting, 'system_setting_json')
 
     def test_kmbox_connect(self):
+        if not check_ping(system_setting['IP']):
+            Messagebox.show_warning(title='警告', message='kmbox无法ping通,请在系统设置中修正kmbox相关参数配置')
+            return False
         result = kmNet.init(system_setting['IP'], system_setting['Port'], system_setting['UUID'])
         if result == 0:
-            Messagebox.show_info("成功连接到kmbox！", "kmbox连接测试")
+            Messagebox.show_info(title="kmbox连接测试", message="成功连接到kmbox！")
+            return True
         else:
-            Messagebox.show_error("连接kmbox失败,请检查ip,port,uuid是否正确！", "kmbox连接测试")
+            Messagebox.show_warning(title='警告', message='kmbox无法连接,请在系统设置中修正kmbox相关参数配置')
+            return False

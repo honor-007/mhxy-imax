@@ -1,4 +1,3 @@
-from ttkbootstrap import *
 import ttkbootstrap as tk
 from ttkbootstrap.dialogs.dialogs import Messagebox
 
@@ -76,7 +75,7 @@ class AppilcationGui():
         target_tab = event.widget.index(event.widget.select())
         if not module_task_stop_event.is_set() and target_tab != self.previous_tab:
             self.notebook.select(self.previous_tab)
-            Messagebox.show_warning("警告", "切换模块前请先关闭任务！")
+            Messagebox.show_warning("切换模块前请先关闭任务！", "警告")
         else:
             self.previous_tab = target_tab
 
@@ -99,7 +98,6 @@ class AppilcationGui():
         self.root.destroy()
 
     def start_application_window(self):
-        print("start_application_window===========")
         self.init_window()
         self.root.protocol("WM_DELETE_WINDOW", self.on_close_application_window)
         # 启动线程

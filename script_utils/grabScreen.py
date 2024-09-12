@@ -6,6 +6,7 @@ import win32gui
 import win32ui
 import numpy as np
 
+from script_utils.loggerConfig import logger
 from src.components.window import SCREEN_SCALE
 from src.utils.globalVariable import log_queue
 
@@ -60,6 +61,6 @@ def winShot(hwnd):
         region = win32gui.GetWindowRect(hwnd)
     except Exception as e:
         log_queue.put(f"截取mhxy游戏窗口失败,请确认游戏窗口位于最前端")
-        print(f"截取mhxy游戏窗口失败: {e}")
+        logger.error(f"截取mhxy游戏窗口失败: {e}")
     else:
         return grab_screen(region=region)

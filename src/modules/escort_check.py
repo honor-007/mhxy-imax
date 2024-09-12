@@ -20,7 +20,7 @@ from siamese_utils.verification_code import make_mock_picture
 from src.components.gameMouse import game_mouse
 from src.components.window import WINDOW_ID
 from src.utils import sound_util
-from src.utils.globalVariable import check_image_save_path, alarm_stop_event, log_queue
+from src.utils.globalVariable import alarm_stop_event, log_queue
 from src.utils.img_util import save_image, save_escort_task_check
 
 WORD_IMAGE = {}

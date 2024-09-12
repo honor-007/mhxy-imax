@@ -207,7 +207,7 @@ class MousePyautogui(MouseEventInterface):
 
 class MouseKmboxEnc(MouseEventInterface):
     def __init__(self):
-        print("init===")
+        logger.warning("注意:开始初始化kmbox键鼠设备,若长时间无响应则需检测kmbox设备是否可以正常连接")
 
     # 贝塞尔算法 计算下个点在x,y轴要移动的距离
     def bezierCurve(self, control_points, t):
@@ -364,9 +364,9 @@ class MouseKmboxEnc(MouseEventInterface):
 if system_setting['interactor'] == '模拟键鼠':
     inputautogui = MousePyautogui()
 if system_setting['interactor'] == '驱动键鼠':
-    result = kmNet.init(system_setting['IP'], system_setting['Port'], system_setting['UUID'])
-    if result == 0:
-        logger.info("kmbox init success")
-    else:
-        logger.error("kmbox init fail")
+    # result = kmNet.init(system_setting['IP'], system_setting['Port'], system_setting['UUID'])
+    # if result == 0:
+    #     logger.info("kmbox init success")
+    # else:
+    #     logger.error("kmbox init fail")
     inputautogui = MouseKmboxEnc()

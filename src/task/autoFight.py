@@ -34,7 +34,7 @@ class AutoFight:
     def __screenshot(self):
         return winShot(self.hwnd)
 
-    def __if_have_ntification_check(self, rate=0.95):
+    def __if_have_notification_check(self, rate=0.95):
         # if not self.__windows_in_screen():
         #     log_queue("梦幻西游不在当前窗口,无法进行游戏鼠标移动...")
         #     return False
@@ -76,12 +76,12 @@ class AutoFight:
 
     def __auto_click_four_people(self, rate=0.85):
         # 有弹窗并完成切割返回true 否则false
-        if not self.__if_have_ntification_check(rate):
+        if not self.__if_have_notification_check(rate):
             return
         min_index = hm.model_predict(hover_list)
         # TODO 计算点击坐标(暂时设置为 识别出的切割图片的中心位置)
         screen_shot = self.__screenshot()
-        result = match_img(screen_shot, hover_list[min_index], 10, 10, 0.98)
+        result = match_img(screen_shot, hover_list[min_index], 10, 10, 0.95)
         if result[3] is None:
             log_queue.put("匹配失败弹窗点击失败,需要手动处理")
             save_fight_normal_check(screen_shot)
@@ -97,7 +97,7 @@ class AutoFight:
             log_queue.put(f'根据预测结果,点击坐标为[x：{target_x} < ; y：{target_y}]')
             game_mouse.move_click(target_x, target_y)
             time.sleep(0.5)
-            if self.__if_have_ntification_check(rate):
+            if self.__if_have_notification_check(rate):
                 log_queue.put("匹配失败弹窗点击失败,需要手动处理")
                 # TODO 收集预测失败的图片
                 save_fight_normal_check(screen_shot)

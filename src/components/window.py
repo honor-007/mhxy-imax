@@ -40,17 +40,21 @@ def get_window(name):
         title = win32gui.GetWindowText(hWnd)
         if name in title and "聊天窗口" not in title:
             return hWnd
-    raise Exception(f"Can't find window , please check {name} is opened")
+    return -1
+    # raise Exception(f"Can't find window , please check {name} is opened")
 
 
 def get_mhxy_hwnd(use_id=config.main_user):
     hwnd = get_window("梦幻西游 ONLINE")
+    if hwnd == -1:
+        return -1
     hwnd_list = get_all_child_window(hwnd)
-    game_hwnd = 0
+    game_hwnd = -1
     for hWnd in hwnd_list:
         title = win32gui.GetWindowText(hWnd)
         if str(use_id) in title:
             return hWnd
+        # 正式上线要删除下面两行
         if "梦幻西游 ONLINE" in title:
             game_hwnd = hWnd
     return game_hwnd

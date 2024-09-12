@@ -2,7 +2,7 @@ import os
 
 root_dir = os.path.abspath(os.path.dirname(__file__))
 # **************** you can custom  this settings *************************************
-main_user = 3052589
+main_user = 27761490
 gpu = False
 player_action = "q"
 bb_action = "q"

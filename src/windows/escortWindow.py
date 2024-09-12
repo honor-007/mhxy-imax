@@ -1,16 +1,17 @@
 import threading
 import time
+
 import ttkbootstrap as tk
 from ttkbootstrap import OUTLINE
+from ttkbootstrap.dialogs import Messagebox
 
-# from ttkbootstrap import *
-
+from assets.sources import *
 from src.components.window import WINDOW_ID
 from src.task.autoFight import AutoFight
 from src.task.escort import escort_one_time
 from src.utils.globalVariable import escort_stop_event, auto_fight_stop_event, alarm_stop_event, \
     stop_escort_event, clear_escort_event, log_queue
-from assets.sources import *
+from src.utils.other_util import init_kmbox
 
 LOG_LINE_NUM = 0
 
@@ -262,12 +263,18 @@ class EscortGui():
         print("bb攻击:", event.widget.get())
 
     def start_escort_task(self):
-        print("开始执行任务")
+        log_queue.put("开始执行任务...")
         for key, value in escort_setting.items():
             if value is None:
-                log_queue.put("{}设置内容有缺失,无法启动(不使用坐骑技能请随便设置,不可为空)".format(key))
-                print("{}设置内容有缺失,无法启动(不使用坐骑技能请随便设置,不可为空)".format(key))
+                Messagebox.show_error(title='内容缺失',
+                                      message=f'{key}设置内容有缺失,无法启动(不使用坐骑技能请随便设置,不可为空')
                 return
+
+        log_queue.put('开始连接kmbox键鼠...')
+        if system_setting['interactor'] == '驱动键鼠':
+            if not init_kmbox():
+                return
+
         clear_escort_event()
         self.escort_thread = threading.Thread(target=self.escort_task)
         self.auto_fight_thread = threading.Thread(target=self.auto_fight_task)
@@ -277,7 +284,7 @@ class EscortGui():
         self.stop_button.config(state='normal')  # 启用停止按钮
         self.start_button.config(state='disabled')  # 禁用开始按钮
 
-        print("押镖任务执行完毕")
+        log_queue.put("押镖任务执行完毕...")
 
     def end_escort_task(self):
         stop_escort_event()
@@ -315,6 +322,8 @@ class EscortGui():
         for i in range(5):
             log_queue.put(f"自动押镖脚本将在{5 - i}s后启动,请保持梦幻西游窗口在当前页面")
             time.sleep(1)
+            if escort_stop_event.is_set():
+                return
         auto_fight_task = AutoFight(WINDOW_ID, escort_setting)
         while not auto_fight_stop_event.is_set():
             log_queue.put("正在执行自动战斗...")

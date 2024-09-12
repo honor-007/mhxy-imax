@@ -9,7 +9,7 @@ from src.components.gameMouse import game_mouse
 from src.components.status import isFight
 from src.components.InputAutoGui import inputautogui
 from src.components.window import WINDOW_ID, NAME
-from src.modules.check import click_check
+from src.modules.escort_check import click_check
 from src.modules.map import MapTask, click_button, click_button_v2
 from src.modules.npc import NpcTask
 from src.modules.props import PropsFunction

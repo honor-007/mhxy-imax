@@ -76,5 +76,3 @@ system_setting = load_json("system_setting_json")
 # 激活相关
 activate_setting = load_json('activate_setting_json')
 
-print(get_source("idiom_confirm"))
-print(get_source("idiom_reset"))
