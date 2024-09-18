@@ -1,4 +1,5 @@
 import subprocess
+import time
 
 import kmNet
 import win32gui
@@ -7,7 +8,7 @@ from ttkbootstrap.dialogs.dialogs import Messagebox
 import config
 from assets.sources import system_setting
 from src.components.window import WINDOW_ID, get_mhxy_hwnd
-from src.utils.globalVariable import log_queue
+from src.utils.globalVariable import log_queue, module_task_stop_event
 
 
 def check_ping(ip_address):
@@ -60,7 +61,21 @@ def before_start_task_check(setting):
 
     win32gui.SetForegroundWindow(WINDOW_ID)
 
-# if __name__ == "__main__":
-#     win32gui.ShowWindow(68072, 8)
-#     win32gui.BringWindowToTop(68072)
-#     win32gui.SetForegroundWindow(68072)
+
+def if_windows_in_screen():
+    """
+    判断当前窗口是否是mhxy的窗口
+    :return:
+    """
+    if module_task_stop_event.is_set():
+        module_task_stop_event.clear()
+        return
+    if win32gui.GetWindowText(win32gui.GetForegroundWindow()) != win32gui.GetWindowText(WINDOW_ID):
+        log_queue.put("梦幻西游不在当前窗口,请将梦幻西游窗口打开为当前窗口...")
+        # print('梦幻西游不在当前窗口,请将梦幻西游窗口打开为当前窗口...')
+        time.sleep(1)
+        if_windows_in_screen()
+
+
+if __name__ == "__main__":
+    if_windows_in_screen()

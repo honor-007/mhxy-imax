@@ -1,8 +1,7 @@
 import datetime
-import time
+import os
 
 import cv2
-import os
 
 # 获取当前文件的绝对路径
 current_file_path = os.path.abspath(__file__)
@@ -43,6 +42,6 @@ def save_image(img, folder_path=r'E:\temp'):
     cv2.imwrite(img_path, img)
 
 
-# img = cv2.imread('test16.png')
+# img = cv2.imread('**.png')
 # save_fight_normal_check(img)
 # save_fight_reward_check(img)

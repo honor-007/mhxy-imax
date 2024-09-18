@@ -328,5 +328,5 @@ class EscortGui():
         while not auto_fight_stop_event.is_set():
             log_queue.put("正在执行自动战斗...")
             auto_fight_task.run()
-            time.sleep(1)
+            time.sleep(0.5)
         auto_fight_stop_event.clear()

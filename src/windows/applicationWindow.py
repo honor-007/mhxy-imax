@@ -51,9 +51,9 @@ class AppilcationGui():
         # tab页内容
         escort_gui = escortWindow.EscortGui(page_escort)
         escort_gui.init_window()
-        tk.Label(page_zhuogui, text="zhuogui").pack(pady=20)
-        tk.Label(page_datu, text="datu").pack(pady=20)
-        tk.Label(page_datu, text="paoshang").pack(pady=20)
+        tk.Label(page_zhuogui, text="敬请期待").pack(pady=20)
+        tk.Label(page_datu, text="敬请期待").pack(pady=20)
+        tk.Label(page_datu, text="敬请期待").pack(pady=20)
         auto_fight_gui = autoFightWindow.AutoFightGui(page_afk)
         auto_fight_gui.init_window()
 

@@ -2,7 +2,6 @@
 import random
 import time
 
-import cv2
 import win32gui
 
 import game_models.hoverModel as hm
@@ -10,7 +9,6 @@ from assets.sources import get_source, auto_fight_setting
 from config import hover_list
 from script_utils.grabScreen import winShot
 from script_utils.imageTransform import get_hp_rect, get_mp_rect
-from script_utils.loggerConfig import logger
 from script_utils.matchTemplate import match_img, crop_image_data
 from src.components.InputAutoGui import inputautogui
 from src.components.gameMouse import game_mouse
@@ -21,6 +19,7 @@ from src.modules.map import click_button
 from src.utils import sound_util
 from src.utils.globalVariable import auto_fight_stop_event, module_task_stop_event, log_queue
 from src.utils.img_util import save_fight_normal_check
+from src.utils.other_util import if_windows_in_screen
 from src.utils.random_util import random_button_coordinate
 
 
@@ -121,7 +120,7 @@ class AutoFight:
                 log_queue.put("战斗结束,检查任务状态...")
                 self.restore()
                 if '无' != self.auto_fight_setting['dazuo']:
-                    time.sleep(random.randint(1, 10))
+                    time.sleep(random.randint(1, 3))
                     if not isFight.is_fighting():
                         log_queue.put("打坐回蓝...")
                         inputautogui.press(self.auto_fight_setting['dazuo'])
@@ -265,11 +264,10 @@ class AutoFight:
 
     def __automation(self, fight_type, rate):
         while not auto_fight_stop_event.is_set():
-            # TODO 收集训练集期间需手动处理弹窗
-            # self.__auto_click_four_people(fight_type, rate)
+            if_windows_in_screen()
             self.__auto_fight_first_step(rate)
             self.__auto_action()
-            time.sleep(1)
+            time.sleep(0.5)
 
     def run(self, fight_type=0, rate=0.85):
         self.__automation(fight_type, rate)

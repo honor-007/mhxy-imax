@@ -1,21 +1,28 @@
+
 import subprocess
 
-def check_ping(ip_address):
-    # 使用ping命令检查IP是否可达
-    command = ['ping', '-n', '1', ip_address]  # 在Linux/MacOS上使用'-c'参数，在Windows上使用'-n'参数
-    try:
-        # 执行ping命令
-        subprocess.run(command, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        # 如果ping成功，则返回True
-        return True
-    except subprocess.CalledProcessError:
-        # 如果ping失败，则返回False
-        return False
+# 执行命令并获取输出
+result = subprocess.run(['wmic', 'csproduct', 'get', 'UUID'], capture_output=True, text=True)
 
-# 示例用法
-ip_address = '192.168.2.186'
-if check_ping(ip_address):
-    print(f"{ip_address} is reachable.")
+# 输出包含了很多额外的信息，我们需要从中提取UUID
+# 注意：这个简单的例子假设UUID是输出的第一行（在实际情况中可能不是这样）
+# 更健壮的方法可能需要解析整个输出
+lines = result.stdout.splitlines()
+if lines:
+    uuid_value = lines[2]  # 假设UUID在第二行（第一行通常是标题）
+    print(f"UUID: {uuid_value}")
 else:
-    print(f"{ip_address} is not reachable.")
+    print("没有找到UUID信息")
 
+# 执行命令并获取输出
+result = subprocess.run(['wmic', 'bios', 'get', 'serialnumber'], capture_output=True, text=True)
+
+# 输出包含了很多额外的信息，我们需要从中提取UUID
+# 注意：这个简单的例子假设UUID是输出的第一行（在实际情况中可能不是这样）
+# 更健壮的方法可能需要解析整个输出
+lines = result.stdout.splitlines()
+if lines:
+    uuid_value = lines[2]  # 假设UUID在第二行（第一行通常是标题）
+    print(f"BIOS SerialNumber: {uuid_value}")
+else:
+    print("没有找到BIOS SerialNumber信息")
