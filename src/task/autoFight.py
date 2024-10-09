@@ -131,7 +131,7 @@ class AutoFight:
         :return:
         """
         if isFight.is_fighting():
-            log_queue.put("战斗中,弹窗处理完毕,执行战斗操作")
+            log_queue.put("战斗中,弹窗已处理完毕,执行战斗操作")
             if isFight.is_need_fight_action():
                 if self.auto_fight_setting["character_attack"] == "alt+a":
                     inputautogui.hotkey('alt', 'a')
@@ -146,6 +146,19 @@ class AutoFight:
                     inputautogui.hotkey('alt', 'q')
                 elif self.auto_fight_setting["bb_attack"] == "alt+d":
                     inputautogui.hotkey('alt', 'd')
+                # 操作完再检查一次以提高程序健壮性
+                if isFight.is_need_fight_action():
+                    # 如何战斗操作栏还在,说明没操作成功
+                    # 1.检查鼠标形状是否变成了施法形状(如果两场战斗相隔时间太近,又开启了酒肆/巫医恢复的话,可能会在战斗中按下酒肆/巫医快捷键)
+                    result = match_img(self.__screenshot(), get_source("disable_mouse"), 10, 10, 0.95)[3]
+                    if result is not None:
+                        inputautogui.right_click()
+                        return self.__auto_action()
+                    # result = match_img(self.__screenshot(), get_source("magic_mouse"), 10, 10, 0.95)[3]
+                    # if result is not None:
+                    #     inputautogui.right_click()
+                    #     return self.__auto_action()
+                    # 2.如果不是1的影响,可能是alt没生效只按了q,导致在打字
             return True
         return False
 

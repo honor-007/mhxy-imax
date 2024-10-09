@@ -249,6 +249,11 @@
     "directory": "fight",
     "desc": "酒肆技能对话框"
   },
+  "disable_mouse": {
+    "name": "disable_mouse.png",
+    "directory": "fight",
+    "desc": "不可点击鼠标图标"
+  },
   "alarm_sound": {
     "name": "alarm.mp3",
     "directory": "sound",
