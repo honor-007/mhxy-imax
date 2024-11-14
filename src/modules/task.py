@@ -35,8 +35,8 @@ class GameTask:
         right_down = result[3]['rectangle'][3]
         crop_data = crop_image_data(screenshot, left_up=(left_up[0] - 136, left_up[1] + 47),
                                     right_down=(right_down[0], right_down[1] + 58))
-        # crop_data = hsvFilterTaskRed(crop_data)
-        crop_data = hsvFilterEscortTaskNpcRed(crop_data)
+        crop_data = hsvFilterTaskRed(crop_data)
+        # crop_data = hsvFilterEscortTaskNpcRed(crop_data)
         result = cn_ocr.ocr(crop_data)
         if result:
             for data in result:

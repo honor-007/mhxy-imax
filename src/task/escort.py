@@ -106,8 +106,9 @@ def fly_to(location, retry=3):
     # time.sleep(random.randint(5, 10) / 10)
     # 向郑镖头移动
     log_queue.put("进入长风镖局后第一次向郑镖头移动...")
-    game_mouse.move_click(random.randint(800, 950), random.randint(350, 400), bias=20)
-    time.sleep(random.randint(25, 30) / 10)
+    # game_mouse.move_click(random.randint(800, 950), random.randint(350, 400), bias=20)
+    game_mouse.move_click(random.randint(400, 450), random.randint(150, 200), bias=20)
+    time.sleep(random.randint(50, 60) / 10)
     return True
 
 

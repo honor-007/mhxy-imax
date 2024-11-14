@@ -1,0 +1,1 @@
+pyinstaller -D main.py  --add-data .\assets:.\assets --add-data .\game_models\:.\game_models --add-data D:\python\label_cn.txt:.\cnocr --add-data .\src\runs_data\:.\src\runs_data --add-data .\yolov5\:.\yolov5

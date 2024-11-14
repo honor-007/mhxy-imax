@@ -15,7 +15,7 @@ if __name__ == "__main__":
 
     if if_activated:
         # 检查相关角色是否已经进入游戏
-        if WINDOW_ID == -1:
+        if WINDOW_ID == 1:
             showerror(title='错误', message='请先确认绑定的角色进入游戏后再打开此软件')
         else:
             applicationGui = AppilcationGui(root)

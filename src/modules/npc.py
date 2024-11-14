@@ -86,7 +86,7 @@ class NPC:
             template = os.path.join(basedir, 'npc', template)
             inputautogui.press('f9')
             time.sleep(0.5)
-            result = match_img(self.__screenshot(), template, 10, 10)
+            result = match_img(self.__screenshot(), template, 10, 10,0.95)
             logger.info("close to {}".format(name))
             if result[3]:
                 x, y = result[3]['result']

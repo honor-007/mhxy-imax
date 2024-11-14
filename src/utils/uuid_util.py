@@ -1,7 +1,7 @@
 import subprocess
 
 
-def motherboardUUID():
+def mother_board_uuid():
     # 执行命令并获取输出
     result = subprocess.run(['wmic', 'csproduct', 'get', 'UUID'], capture_output=True, text=True)
 
@@ -10,15 +10,15 @@ def motherboardUUID():
     # 更健壮的方法可能需要解析整个输出
     lines = result.stdout.splitlines()
     if lines:
-        uuid_value = lines[2]  # 假设UUID在第二行（第一行通常是标题）
+        uuid_value = lines[2].replace(" ", "")  # 假设UUID在第二行（第一行通常是标题）
         print(f"UUID: {uuid_value}")
         return uuid_value
     else:
         print("没有找到UUID信息")
-        return None
+        return ""
 
 
-def BIOSSerialNumber():
+def bios_serial_no():
     # 执行命令并获取输出
     result = subprocess.run(['wmic', 'bios', 'get', 'serialnumber'], capture_output=True, text=True)
 
@@ -27,15 +27,27 @@ def BIOSSerialNumber():
     # 更健壮的方法可能需要解析整个输出
     lines = result.stdout.splitlines()
     if lines:
-        uuid_value = lines[2]  # 假设UUID在第二行（第一行通常是标题）
+        uuid_value = lines[2].replace(" ", "")  # 假设UUID在第二行（第一行通常是标题）
         print(f"BIOS SerialNumber: {uuid_value}")
         return uuid_value
     else:
         print("没有找到BIOS SerialNumber信息")
-        return None
+        return ""
 
-def test():
-    print("11")
 
-if __name__ == "__main__":
-    BIOSSerialNumber()
+# if __name__ == "__main__":
+# motherboardUUID()
+# BIOSSerialNumber()
+
+
+from itertools import zip_longest
+
+
+def get_pc_code():
+    str1 = mother_board_uuid()
+    str2 = bios_serial_no()
+    result = ''.join(s1 + s2 for s1, s2 in zip_longest(str1, str2, fillvalue=''))
+    return result
+
+
+# result = get_pc_code()

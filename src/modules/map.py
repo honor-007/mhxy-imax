@@ -342,6 +342,7 @@ class Map:
 
             inputautogui.hotkey('alt', 'h')
             inputautogui.press('f9')
+            # info["action"]["type"] == 0 到达传送点附近 需要点击传送点进入下个场景
             if info["action"]["type"] == 0:
                 x, y = info["action"]["xy"]
                 # 增加随机，避免一直点一个点
@@ -384,4 +385,4 @@ MapTask = Map(WINDOW_ID)
 
 if __name__ == '__main__':
     # time.sleep(2)
-    MapTask.MoveToTarget("凌霄宝殿", "None")
+    MapTask.MoveToTarget("东海湾", "None")
