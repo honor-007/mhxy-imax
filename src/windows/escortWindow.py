@@ -9,6 +9,7 @@ from assets.sources import *
 from src.components.window import WINDOW_ID
 from src.task.autoFight import AutoFight
 from src.task.escort import escort_one_time
+from src.utils import check_util
 from src.utils.globalVariable import escort_stop_event, auto_fight_stop_event, alarm_stop_event, \
     stop_escort_event, clear_escort_event, log_queue
 from src.utils.other_util import init_kmbox
@@ -263,19 +264,12 @@ class EscortGui():
         print("bb攻击:", event.widget.get())
 
     def start_escort_task(self):
-        log_queue.put("开始执行任务...")
-        for key, value in escort_setting.items():
-            if value is None:
-                Messagebox.show_error(title='内容缺失',
-                                      message=f'{key}设置内容有缺失,无法启动(不使用坐骑技能请随便设置,不可为空')
-                return
-
-        log_queue.put('开始连接kmbox键鼠...')
-        if system_setting['interactor'] == '驱动键鼠':
-            if not init_kmbox():
-                return
-
+        # 1 开始前的统一检查
+        if not check_util.before_start_check(escort_setting):
+            return
+        # 2 恢复停止事件的默认设置
         clear_escort_event()
+        # 3 开启线程
         self.escort_thread = threading.Thread(target=self.escort_task)
         self.auto_fight_thread = threading.Thread(target=self.auto_fight_task)
         self.escort_thread.start()

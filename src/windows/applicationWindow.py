@@ -3,7 +3,7 @@ from ttkbootstrap.dialogs.dialogs import Messagebox
 
 from script_utils.loggerConfig import logger
 from src.utils.globalVariable import *
-from src.windows import escortWindow, autoFightWindow, systemWindow, logWindow
+from src.windows import escortWindow, autoFightWindow, systemWindow, logWindow, activeWindow
 
 
 class AppilcationGui():
@@ -37,25 +37,31 @@ class AppilcationGui():
         page_escort = tk.Frame(self.notebook)
         page_zhuogui = tk.Frame(self.notebook)
         page_datu = tk.Frame(self.notebook)
+        page_paoshang = tk.Frame(self.notebook)
         page_afk = tk.Frame(self.notebook)
         page_system = tk.Frame(self.notebook)
+        page_active = tk.Frame(self.notebook)
 
         # 添加标签页到 Notebook
         self.notebook.add(page_escort, text='  押镖  ')
         self.notebook.add(page_zhuogui, text='  捉鬼  ')
         self.notebook.add(page_datu, text='  打图  ')
-        self.notebook.add(page_datu, text='  跑商  ')
+        self.notebook.add(page_paoshang, text='  跑商  ')
         self.notebook.add(page_afk, text='  挂机  ')
         self.notebook.add(page_system, text=' 系统设置 ')
+        self.notebook.add(page_active, text=' 激活 ')
         self.notebook.bind("<<NotebookTabChanged>>", self.on_tab_change)
         # tab页内容
         escort_gui = escortWindow.EscortGui(page_escort)
         escort_gui.init_window()
         tk.Label(page_zhuogui, text="敬请期待").pack(pady=20)
         tk.Label(page_datu, text="敬请期待").pack(pady=20)
-        tk.Label(page_datu, text="敬请期待").pack(pady=20)
+        tk.Label(page_paoshang, text="敬请期待").pack(pady=20)
         auto_fight_gui = autoFightWindow.AutoFightGui(page_afk)
         auto_fight_gui.init_window()
+
+        active_gui = activeWindow.ActiveGui(page_active)
+        active_gui.init_window()
 
         system_gui = systemWindow.SystemGui(page_system)
         system_gui.init_window()

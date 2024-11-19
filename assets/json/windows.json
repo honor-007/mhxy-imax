@@ -53,5 +53,19 @@
       "",
       ""
     ]
+  },
+    "active_window": {
+    "single_system_column_1": [
+      "角色ID:",
+      "激活码:",
+      "kmbox_Port:",
+      "kmbox_UUID:",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ]
   }
 }

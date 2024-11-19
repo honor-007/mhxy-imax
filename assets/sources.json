@@ -219,6 +219,11 @@
     "directory": "json",
     "desc": ""
   },
+    "active_setting_json": {
+    "name": "activate.json",
+    "directory": "json",
+    "desc": ""
+  },
   "auto_fight_setting_json": {
     "name": "autoFight.json",
     "directory": "json",

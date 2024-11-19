@@ -4,10 +4,13 @@ import ttkbootstrap as tk
 from ttkbootstrap.constants import *
 from ttkbootstrap.dialogs.dialogs import Messagebox
 
-from assets.sources import windows_json, auto_fight_setting, write_json, system_setting
+from assets.sources import windows_json, auto_fight_setting, write_json, system_setting, activate_setting
 from src.components.window import WINDOW_ID
 from src.task.autoFight import AutoFight
 from src.utils.globalVariable import *
+import src.utils.globalVariable as gv
+import src.utils.check_util as check_util
+
 from src.utils.other_util import init_kmbox
 
 
@@ -206,21 +209,12 @@ class AutoFightGui():
         print("bb攻击:", event.widget.get())
 
     def start_auto_fight_task(self):
-        log_queue.put("开始执行任务...")
-        for key, value in auto_fight_setting.items():
-            if value is None:
-                Messagebox.show_error(title='内容缺失',
-                                      message=f'{key}设置内容有缺失,无法启动(不使用坐骑技能请随便设置,不可为空')
-                return
-
-
-
-        log_queue.put('开始连接kmbox键鼠...')
-        if system_setting['interactor'] == '驱动键鼠':
-            if not init_kmbox():
-                return
-
+        # 1 开始前的统一检查
+        if not check_util.before_start_check(auto_fight_setting):
+            return
+        # 2 恢复停止事件的默认设置
         clear_auto_fight_event()
+        # 3 开启线程
         self.auto_fight_thread = threading.Thread(target=self.auto_fight_task)
         self.auto_fight_thread.start()
 
