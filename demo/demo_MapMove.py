@@ -102,8 +102,8 @@ def MapMove(x, y, region, next=None):
     pass
 
 
-time.sleep(2)
+# time.sleep(2)
 # shot = winShot(WINDOW_ID)
 # cv2.imshow("22",shot)
 # cv2.waitKey()
-MapMove(280, 40, '长安城', '大唐国境-驿站')
+# MapMove(280, 40, '长安城', '大唐国境-驿站')

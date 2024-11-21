@@ -54,7 +54,7 @@ def get_mhxy_hwnd(use_id=config.main_user):
         title = win32gui.GetWindowText(hWnd)
         if str(use_id) in title:
             return hWnd
-        # 正式上线要删除下面两行
+        # TODO 正式上线要删除下面两行
         if "梦幻西游 ONLINE" in title:
             game_hwnd = hWnd
     return game_hwnd

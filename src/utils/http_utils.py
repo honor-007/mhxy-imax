@@ -5,9 +5,6 @@ from tkinter.messagebox import showerror
 import requests
 import json
 
-from ttkbootstrap.dialogs import Messagebox
-
-from assets.sources import activate_setting
 from src.encrypt.aes import AesEncrypt
 from src.utils.globalVariable import log_queue
 from src.utils.uuid_util import get_pc_code
@@ -84,7 +81,7 @@ def check(characterId):
     return base_post(base_url + 'activation/check', data)
 
 
-character_id = activate_setting['character_id']
-http_response = check(character_id)
+# character_id = system_setting['character_id']
+# http_response = check(character_id)
 # http_response = check('123456')
-print(http_response)
+# print(http_response)

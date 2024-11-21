@@ -75,11 +75,11 @@ class ActivateGui():
         join_label.bind("<Button-1>", self.open_join_link)
 
     def on_id_change(self, event):
-        activate_setting['character_id'] = event.widget.get()
+        system_setting['character_id'] = event.widget.get()
         print("人物id:", event.widget.get())
 
     def on_activate_code_change(self, event):
-        activate_setting['activate_code'] = event.widget.get()
+        system_setting['activate_code'] = event.widget.get()
         print("激活码:", event.widget.get())
 
     def activate(self):

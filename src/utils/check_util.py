@@ -1,7 +1,7 @@
 from ttkbootstrap.dialogs import Messagebox
 from src.utils.globalVariable import log_queue
 import src.utils.globalVariable as gv
-from assets.sources import activate_setting, system_setting
+from assets.sources import system_setting
 from src.utils.other_util import init_kmbox
 
 
@@ -10,7 +10,7 @@ def before_start_check(settings):
     脚本(捉鬼/自动战斗/跑镖...)开始前的统一检查
     """
     if not gv.activate_flag:
-        character_id = activate_setting['character_id']
+        character_id = system_setting['character_id']
         Messagebox.show_error(title='未激活', message=f'角色[{character_id}]未激活或已到期,请先激活')
         return False
     log_queue.put("开始执行任务...")
