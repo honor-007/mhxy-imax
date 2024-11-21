@@ -9,6 +9,10 @@ import pyautogui
 from assets.sources import system_setting
 from script_utils.loggerConfig import logger
 
+"""
+鼠标键盘的控制操作
+"""
+
 
 def randomOne():
     return (random.randint(0, 20)) / 10
@@ -364,9 +368,4 @@ class MouseKmboxEnc(MouseEventInterface):
 if system_setting['interactor'] == '模拟键鼠':
     inputautogui = MousePyautogui()
 if system_setting['interactor'] == '驱动键鼠':
-    # result = kmNet.init(system_setting['IP'], system_setting['Port'], system_setting['UUID'])
-    # if result == 0:
-    #     logger.info("kmbox init success")
-    # else:
-    #     logger.error("kmbox init fail")
     inputautogui = MouseKmboxEnc()

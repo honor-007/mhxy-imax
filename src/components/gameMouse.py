@@ -1,4 +1,4 @@
-import math
+import random
 import random
 import time
 
@@ -15,7 +15,7 @@ from script_utils.loggerConfig import logger
 from script_utils.matchTemplate import match_img
 from src.components.InputAutoGui import inputautogui
 from src.components.window import WINDOW_ID
-from src.utils.globalVariable import mouse_stop_event, auto_fight_stop_event, module_task_stop_event, log_queue
+from src.utils.globalVariable import mouse_stop_event, module_task_stop_event, log_queue
 
 
 def start_point(x_min, y_min, x_max, y_max):
@@ -90,6 +90,9 @@ def locked_mouse(function):
 
 
 class Mouse:
+    """
+    游戏内指针的相关操作
+    """
     def __init__(self, hwnd):
         self.hwnd = hwnd
         self.name = win32gui.GetWindowText(hwnd)
