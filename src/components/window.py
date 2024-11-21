@@ -81,8 +81,9 @@ def get_windows_scaling_factor():
 
 
 WINDOW_ID = get_mhxy_hwnd()
-NAME = win32gui.GetWindowText(WINDOW_ID).split('-')[-1].split('[')[0].strip()
+GAMEING_NAME = win32gui.GetWindowText(WINDOW_ID).split('-')[-1].split('[')[0].strip()
+GAMEING_CHATACTER_ID = win32gui.GetWindowText(WINDOW_ID).split('-')[-1].split('[')[0].strip()
 SCREEN_SCALE = get_windows_scaling_factor()
 print("mhxy window id:", WINDOW_ID)
 print("mhxy window title:", win32gui.GetWindowText(WINDOW_ID))
-print("character name:", NAME)
+print("character name:", GAMEING_NAME)

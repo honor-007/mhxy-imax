@@ -8,7 +8,7 @@ from script_utils.matchTemplate import match_img, crop_image_data
 from src.components.gameMouse import game_mouse
 from src.components.status import isFight
 from src.components.InputAutoGui import inputautogui
-from src.components.window import WINDOW_ID, NAME
+from src.components.window import WINDOW_ID, GAMEING_NAME
 from src.modules.escort_check import click_check
 from src.modules.map import MapTask, click_button, click_button_v2
 from src.modules.npc import NpcTask
@@ -238,7 +238,8 @@ def finish_escort_task(npc):
         if escort_stop_event.is_set():
             return
         inputautogui.left_click()
-    escort_data.add_task_time(NAME)
+    # TODO 考虑删除下面代码
+    escort_data.add_task_time(GAMEING_NAME)
 
 
 def escort_one_time():
