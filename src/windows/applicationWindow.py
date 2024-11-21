@@ -1,6 +1,5 @@
 import ttkbootstrap as tk
 from ttkbootstrap.dialogs.dialogs import Messagebox
-
 from assets.sources import system_setting
 from script_utils.loggerConfig import logger
 from src.utils.globalVariable import *

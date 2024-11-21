@@ -1,17 +1,12 @@
 import time
-
 import ttkbootstrap as tk
+import src.utils.check_util as check_util
+import src.utils.globalVariable as gv
 from ttkbootstrap.constants import *
-from ttkbootstrap.dialogs.dialogs import Messagebox
-
-from assets.sources import windows_json, auto_fight_setting, write_json, system_setting, activate_setting
+from assets.sources import windows_json, auto_fight_setting, write_json
 from src.components.window import WINDOW_ID
 from src.task.autoFight import AutoFight
 from src.utils.globalVariable import *
-import src.utils.globalVariable as gv
-import src.utils.check_util as check_util
-
-from src.utils.other_util import init_kmbox
 
 
 class AutoFightGui():
