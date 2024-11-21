@@ -1,9 +1,11 @@
 import ttkbootstrap as tk
 from ttkbootstrap.dialogs.dialogs import Messagebox
 
+from assets.sources import system_setting
 from script_utils.loggerConfig import logger
 from src.utils.globalVariable import *
 from src.windows import escortWindow, autoFightWindow, systemWindow, logWindow, activeWindow
+from src.utils import globalVariable
 
 
 class AppilcationGui():
@@ -19,6 +21,7 @@ class AppilcationGui():
         self.previous_tab = 0  # 用于记录之前的tab
         self.root = root_window
         self.task = None
+        globalVariable.character_id = tk.StringVar(value=system_setting['character_id'])
 
     def init_window(self):
         self.root.title("MHXY 辅助工具 v1.0")  # 窗口名
@@ -84,7 +87,8 @@ class AppilcationGui():
             Messagebox.show_warning("切换模块前请先关闭任务！", "警告")
         else:
             self.previous_tab = target_tab
-
+        # 更新全局用户id
+        globalVariable.character_id.set(system_setting['character_id'])
         logger.info(f"Tab changed to index: {target_tab}")
 
     def log_info(self):

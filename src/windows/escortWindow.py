@@ -3,8 +3,8 @@ import time
 
 import ttkbootstrap as tk
 from ttkbootstrap import OUTLINE
-from ttkbootstrap.dialogs import Messagebox
 
+import src.utils.globalVariable as gv
 from assets.sources import *
 from src.components.window import WINDOW_ID
 from src.task.autoFight import AutoFight
@@ -12,7 +12,6 @@ from src.task.escort import escort_one_time
 from src.utils import check_util
 from src.utils.globalVariable import escort_stop_event, auto_fight_stop_event, alarm_stop_event, \
     stop_escort_event, clear_escort_event, log_queue
-from src.utils.other_util import init_kmbox
 
 LOG_LINE_NUM = 0
 
@@ -40,8 +39,7 @@ class EscortGui():
             init_data_label.grid(row=i, column=0, padx=2, pady=2, ipadx=0, ipady=0)
 
         # 第二列内容
-        entry_id = tk.Entry(self.window, font=font, width=width + 2)
-        entry_id.insert(0, escort_setting['character_id'])
+        entry_id = tk.Entry(self.window, font=font, width=width + 2, state='disable', textvariable=gv.character_id)
         entry_id.bind("<KeyRelease>", self.on_id_change)
         entry_id.grid(row=0, column=1, padx=2, pady=2, ipadx=0, ipady=0)
 

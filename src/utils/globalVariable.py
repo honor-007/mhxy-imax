@@ -22,6 +22,8 @@ module_task_stop_event = threading.Event()
 
 activate_flag = False
 
+character_id = None
+
 
 def stop_event_all_set():
     log_stop_event.set()
@@ -36,9 +38,11 @@ def stop_escort_event():
     stop_auto_fight_event()
     escort_stop_event.set()
 
+
 def clear_escort_event():
     clear_auto_fight_event()
     escort_stop_event.clear()
+
 
 def stop_auto_fight_event():
     alarm_stop_event.set()

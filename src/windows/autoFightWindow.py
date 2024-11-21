@@ -32,8 +32,8 @@ class AutoFightGui():
             init_data_label.grid(row=i, column=0, padx=2, pady=2, ipadx=0, ipady=0)
 
         # 第二列内容
-        entry_id = tk.Entry(self.window, font=font, width=width + 2)
-        entry_id.insert(0, auto_fight_setting['character_id'])
+        entry_id = tk.Entry(self.window, font=font, width=width + 2, state='disabled', textvariable=gv.character_id)
+        # entry_id.insert(0, self.character_id)
         entry_id.bind("<KeyRelease>", self.on_id_change)
         entry_id.grid(row=0, column=1, padx=2, pady=2, ipadx=0, ipady=0)
 
