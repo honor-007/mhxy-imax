@@ -1,11 +1,9 @@
-import sys
 from tkinter.messagebox import showinfo
 
 import ttkbootstrap as tk
 
 import src.utils.globalVariable as gv
 from assets.sources import system_setting
-from src.components.window import WINDOW_ID
 from src.utils import http_utils
 from src.windows.applicationWindow import AppilcationGui
 
