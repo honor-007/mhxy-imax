@@ -1,5 +1,4 @@
 import ctypes
-
 import win32gui
 
 import config

@@ -2,7 +2,7 @@ import threading
 import time
 
 import ttkbootstrap as tk
-from ttkbootstrap import OUTLINE
+from ttkbootstrap.constants import OUTLINE
 
 import src.utils.globalVariable as gv
 from assets.sources import *
