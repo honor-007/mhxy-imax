@@ -19,3 +19,4 @@ if __name__ == "__main__":
         root = tk.Window(themename='flatly')
         applicationGui = AppilcationGui(root)
         applicationGui.start_application_window()
+

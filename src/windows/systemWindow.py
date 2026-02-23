@@ -5,6 +5,10 @@ from ttkbootstrap.dialogs import Messagebox
 from ttkbootstrap.tooltip import ToolTip
 
 from assets.sources import system_setting, windows_json, write_json
+from src.components.gui_components import (
+    create_combobox, create_entry, create_label_frame, create_button,
+    FONT_SMALL, PAD_X, PAD_Y
+)
 from src.utils.globalVariable import log_queue
 from src.utils.other_util import init_kmbox, check_ping
 
@@ -13,92 +17,73 @@ class SystemGui():
 
     def __init__(self, root_window):
         self.window = root_window
+        self.entry_ip = None
+        self.entry_port = None
+        self.entry_uuid = None
+        self.interactor_warn_one_label = None
+        self.interactor_warn_two_label = None
 
     def init_window(self):
-        font = ("TkDefaultFont", 8)
-        width = 16
+        # ===== 交互方式 =====
+        interact_frame = create_label_frame(self.window, "交互方式", row=0, col=0, padx=10)
 
-        # 第一列内容[]
-        column_1 = windows_json['system_window']["single_system_column_1"]
-        for i in range(len(column_1)):
-            init_data_label = tk.Label(self.window, text=column_1[i])
-            init_data_label.grid(row=i, column=0, padx=2, pady=2, ipadx=0, ipady=0)
+        interactor_combo = create_combobox(
+            interact_frame, 0, 0, "交互方式:", ('模拟键鼠', '驱动键鼠'),
+            system_setting, 'interactor')
+        # 覆盖默认绑定，增加联动逻辑
+        interactor_combo.unbind("<<ComboboxSelected>>")
+        interactor_combo.bind("<<ComboboxSelected>>", self.on_select_interactor)
 
-        items_interactor_restore = ('模拟键鼠', '驱动键鼠')
-        interactor_gui = tk.Combobox(self.window, font=font, width=width)
-        interactor_gui['values'] = items_interactor_restore
-        default_value = system_setting['interactor']
-        interactor_gui.current(items_interactor_restore.index(f'{default_value}'))
-        interactor_gui.bind("<<ComboboxSelected>>", self.on_select_interactor)  # 绑定事件，当下拉框选项改变时触发
-        interactor_gui.grid(row=0, column=1, padx=2, pady=2, ipadx=0, ipady=0)
+        warning_msg = '!此模式只可简单测试脚本功能,不可长期使用,会被检测!!!'
+        self.interactor_warn_one_label = tk.Label(interact_frame, text=warning_msg[:12] + '...',
+                                                  font=FONT_SMALL, bootstyle="danger")
+        ToolTip(self.interactor_warn_one_label, text=warning_msg)
+        self.interactor_warn_two_label = tk.Label(interact_frame, text="!此模式需设置kmbox",
+                                                  font=FONT_SMALL, bootstyle="info")
 
-        self.entry_ip = tk.Entry(self.window, font=font, width=width + 2)
-        self.entry_ip.insert(0, system_setting['IP'])
-        self.entry_ip.bind("<KeyRelease>", self.on_ip_change)
-        self.entry_ip.grid(row=1, column=1, padx=2, pady=2, ipadx=0, ipady=0)
-
-        self.entry_port = tk.Entry(self.window, font=font, width=width + 2)
-        self.entry_port.insert(0, system_setting['Port'])
-        self.entry_port.bind("<KeyRelease>", self.on_port_change)
-        self.entry_port.grid(row=2, column=1, padx=2, pady=2, ipadx=0, ipady=0)
-
-        self.entry_uuid = tk.Entry(self.window, font=font, width=width + 2)
-        self.entry_uuid.insert(0, system_setting['UUID'])
-        self.entry_uuid.bind("<KeyRelease>", self.on_uuid_change)
-        self.entry_uuid.grid(row=3, column=1, padx=2, pady=2, ipadx=0, ipady=0)
-
-        waring_message = '!此模式只可简单测试脚本功能,不可长期使用,会被检测!!!'
-        self.interactor_warn_one_label = tk.Label(self.window,
-                                                  text=waring_message[:10] + '...',
-                                                  bootstyle="danger")
-        ToolTip(self.interactor_warn_one_label, text=waring_message)
-        self.interactor_warn_two_label = tk.Label(self.window, text="!此模式需设置kmbox", bootstyle="info")
         if system_setting['interactor'] == "模拟键鼠":
-            self.interactor_warn_one_label.grid(row=0, column=2, padx=2, pady=2, ipadx=0, ipady=0)
-        if system_setting['interactor'] == "驱动键鼠":
-            self.interactor_warn_two_label.grid(row=0, column=2, padx=2, pady=2, ipadx=0, ipady=0)
+            self.interactor_warn_one_label.grid(row=0, column=2, padx=PAD_X, pady=PAD_Y, sticky="w")
+        elif system_setting['interactor'] == "驱动键鼠":
+            self.interactor_warn_two_label.grid(row=0, column=2, padx=PAD_X, pady=PAD_Y, sticky="w")
 
-        # 功能按钮
-        save_button = tk.Button(self.window, text="保存", width=8, command=self.save_system_setting, style=OUTLINE)
-        save_button.grid(row=10, column=0, padx=2, pady=10, ipadx=0, ipady=0)
+        # ===== KMBox 配置 =====
+        kmbox_frame = create_label_frame(self.window, "KMBox 配置", row=1, col=0, padx=10)
 
-        save_button = tk.Button(self.window, text="测试kmbox", width=8, command=self.test_kmbox_connect, style=OUTLINE)
-        save_button.grid(row=10, column=1, padx=2, pady=10, ipadx=0, ipady=0)
+        km_state = 'normal' if system_setting['interactor'] == '驱动键鼠' else 'disabled'
+        self.entry_ip = create_entry(kmbox_frame, 0, 0, "IP 地址:", system_setting, 'IP', state=km_state)
+        self.entry_port = create_entry(kmbox_frame, 1, 0, "端口:", system_setting, 'Port', state=km_state)
+        self.entry_uuid = create_entry(kmbox_frame, 2, 0, "UUID:", system_setting, 'UUID', state=km_state)
 
-        self.system_warning_label = tk.Label(self.window, text="注意:修改配置后,需要点击保存,然后重启才能生效",
-                                             bootstyle="danger")
-        self.system_warning_label.grid(row=12, column=0, padx=2, pady=10, ipadx=0, ipady=0, columnspan=3)
+        # ===== 操作按钮 =====
+        btn_frame = tk.Frame(self.window)
+        btn_frame.grid(row=2, column=0, pady=(10, 5))
+
+        create_button(btn_frame, "保存", self.save_system_setting,
+                      row=0, col=0, bootstyle='outline-primary', padx=8)
+        create_button(btn_frame, "测试kmbox", self.test_kmbox_connect,
+                      row=0, col=1, bootstyle='outline-info', padx=8)
+
+        # 提示信息
+        tk.Label(self.window, text="注意: 修改配置后需点击保存，然后重启才能生效",
+                 font=FONT_SMALL, bootstyle="danger").grid(
+            row=3, column=0, padx=10, pady=(10, 5))
 
     def on_select_interactor(self, event):
         system_setting['interactor'] = event.widget.get()
-        print("gui交互方式:", event.widget.get())
         if event.widget.get() == "模拟键鼠":
             self.interactor_warn_two_label.grid_forget()
-            self.interactor_warn_one_label.grid(row=0, column=2, padx=2, pady=2, ipadx=0, ipady=0, sticky="w")
+            self.interactor_warn_one_label.grid(row=0, column=2, padx=PAD_X, pady=PAD_Y, sticky="w")
             self.entry_ip.config(state='disabled')
             self.entry_port.config(state='disabled')
             self.entry_uuid.config(state='disabled')
         elif event.widget.get() == "驱动键鼠":
             self.interactor_warn_one_label.grid_forget()
-            self.interactor_warn_two_label.grid(row=0, column=2, padx=2, pady=2, ipadx=0, ipady=0, sticky="w")
+            self.interactor_warn_two_label.grid(row=0, column=2, padx=PAD_X, pady=PAD_Y, sticky="w")
             self.entry_ip.config(state='normal')
             self.entry_port.config(state='normal')
             self.entry_uuid.config(state='normal')
 
-    def on_ip_change(self, event):
-        system_setting['IP'] = event.widget.get()
-        print("kmbox_IP:", event.widget.get())
-
-    def on_port_change(self, event):
-        system_setting['Port'] = event.widget.get()
-        print("kmbox_Port:", event.widget.get())
-
-    def on_uuid_change(self, event):
-        system_setting['UUID'] = event.widget.get()
-        print("kmbox_UUID:", event.widget.get())
-
     def save_system_setting(self):
-        print("保存系统设置")
         log_queue.put("保存系统设置")
         write_json(system_setting, 'system_setting_json')
 

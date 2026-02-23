@@ -22,7 +22,7 @@ def model_load():
     logger.info('模型读取')
     logger.info('模型路径为:{}'.format(get_model('four_people')))
     global model
-    model = keras.models.load_model(get_model('four_people'))
+    model = keras.models.load_model(get_model('four_people'), compile=False)
     # model = keras.models.load_model(r'E:\workspace\python_project\mhxy-imax\dist\main\_internal\game_models\model\mhxy.h5')
     model.summary()
 
