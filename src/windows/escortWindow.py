@@ -16,7 +16,8 @@ from src.task.escort import escort_one_time
 from src.utils import check_util
 from src.utils.globalVariable import (
     escort_stop_event, auto_fight_stop_event, alarm_stop_event,
-    stop_escort_event, clear_escort_event, log_queue
+    stop_escort_event, clear_escort_event, log_queue,
+    module_task_stop_event
 )
 
 
@@ -136,7 +137,7 @@ class EscortGui():
                 time.sleep(1)
             else:
                 break
-        escort_stop_event.clear()
+        module_task_stop_event.set()
 
     def auto_fight_task(self):
         for i in range(5):
@@ -149,4 +150,4 @@ class EscortGui():
             log_queue.put("正在执行自动战斗...")
             auto_fight_task.run()
             time.sleep(0.5)
-        auto_fight_stop_event.clear()
+        module_task_stop_event.set()

@@ -19,6 +19,7 @@ mouse_stop_event = threading.Event()
 
 # 任务线程标志
 module_task_stop_event = threading.Event()
+module_task_stop_event.set()
 
 activate_flag = True
 

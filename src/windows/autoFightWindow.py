@@ -14,7 +14,8 @@ from src.components.window import WINDOW_ID
 from src.task.autoFight import AutoFight
 from src.utils.globalVariable import (
     escort_stop_event, auto_fight_stop_event, alarm_stop_event,
-    stop_auto_fight_event, clear_auto_fight_event, log_queue
+    stop_auto_fight_event, clear_auto_fight_event, log_queue,
+    module_task_stop_event
 )
 
 
@@ -110,4 +111,4 @@ class AutoFightGui():
         while not auto_fight_stop_event.is_set():
             auto_fight_task.run()
             time.sleep(1)
-        escort_stop_event.clear()
+        module_task_stop_event.set()
