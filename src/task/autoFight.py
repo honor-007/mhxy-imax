@@ -1,4 +1,4 @@
-# -*- coding: gbk -*-
+# -*- coding: utf-8 -*-
 import random
 import time
 
@@ -35,70 +35,70 @@ class AutoFight:
 
     def __if_have_notification_check(self, rate=0.95):
         # if not self.__windows_in_screen():
-        #     log_queue("ÃÎ»ÃÎ÷ÓÎ²»ÔÚµ±Ç°´°¿Ú,ÎŞ·¨½øĞĞÓÎÏ·Êó±êÒÆ¶¯...")
+        #     log_queue("æ¢¦å¹»è¥¿æ¸¸ä¸åœ¨å½“å‰çª—å£,æ— æ³•è¿›è¡Œæ¸¸æˆé¼ æ ‡ç§»åŠ¨...")
         #     return False
         self.__if_windows_in_screen()
         if hover.normalNotification(rate):
-            log_queue.put("¼ì²âµ½ÆÕÍ¨µ¯´°")
+            log_queue.put("æ£€æµ‹åˆ°æ™®é€šå¼¹çª—")
             return True
         elif hover.rewardNotification(rate):
-            log_queue.put("¼ì²âµ½½±Àøµ¯´°1")
+            log_queue.put("æ£€æµ‹åˆ°å¥–åŠ±å¼¹çª—1")
             return True
         # elif hover.rewardMaskNotification(rate):
-        #     log_queue.put("¼ì²âµ½½±Àøµ¯´°2")
+        #     log_queue.put("æ£€æµ‹åˆ°å¥–åŠ±å¼¹çª—2")
         #     return True
         else:
             return False
 
     # def __windows_in_screen(self):
     #     """
-    #     ÅĞ¶Ïµ±Ç°´°¿ÚÊÇ·ñÊÇmhxyµÄ´°¿Ú
+    #     åˆ¤æ–­å½“å‰çª—å£æ˜¯å¦æ˜¯mhxyçš„çª—å£
     #     :return:
     #     """
     #     return win32gui.GetWindowText(win32gui.GetForegroundWindow()) == self.name
 
     def __if_windows_in_screen(self):
         """
-        ÅĞ¶Ïµ±Ç°´°¿ÚÊÇ·ñÊÇmhxyµÄ´°¿Ú
+        åˆ¤æ–­å½“å‰çª—å£æ˜¯å¦æ˜¯mhxyçš„çª—å£
         :return:
         """
         if module_task_stop_event.is_set():
-            module_task_stop_event.clear()
+            # module_task_stop_event.clear()
             return
         if win32gui.GetWindowText(win32gui.GetForegroundWindow()) == self.name:
             return
         else:
-            log_queue("ÃÎ»ÃÎ÷ÓÎ²»ÔÚµ±Ç°´°¿Ú,Çë½«ÃÎ»ÃÎ÷ÓÎ´°¿Ú´ò¿ªÎªµ±Ç°´°¿Ú...")
+            log_queue("æ¢¦å¹»è¥¿æ¸¸ä¸åœ¨å½“å‰çª—å£,è¯·å°†æ¢¦å¹»è¥¿æ¸¸çª—å£æ‰“å¼€ä¸ºå½“å‰çª—å£...")
             time.sleep(1)
             self.__if_windows_in_screen()
             return
 
     def __auto_click_four_people(self, rate=0.85):
-        # ÓĞµ¯´°²¢Íê³ÉÇĞ¸î·µ»Øtrue ·ñÔòfalse
+        # æœ‰å¼¹çª—å¹¶å®Œæˆåˆ‡å‰²è¿”å›true å¦åˆ™false
         if not self.__if_have_notification_check(rate):
             return
         min_index = hm.model_predict(hover_list)
-        # TODO ¼ÆËãµã»÷×ø±ê(ÔİÊ±ÉèÖÃÎª Ê¶±ğ³öµÄÇĞ¸îÍ¼Æ¬µÄÖĞĞÄÎ»ÖÃ)
+        # TODO è®¡ç®—ç‚¹å‡»åæ ‡(æš‚æ—¶è®¾ç½®ä¸º è¯†åˆ«å‡ºçš„åˆ‡å‰²å›¾ç‰‡çš„ä¸­å¿ƒä½ç½®)
         screen_shot = self.__screenshot()
         result = match_img(screen_shot, hover_list[min_index], 10, 10, 0.95)
         if result[3] is None:
-            log_queue.put("Æ¥ÅäÊ§°Üµ¯´°µã»÷Ê§°Ü,ĞèÒªÊÖ¶¯´¦Àí")
+            log_queue.put("åŒ¹é…å¤±è´¥å¼¹çª—ç‚¹å‡»å¤±è´¥,éœ€è¦æ‰‹åŠ¨å¤„ç†")
             save_fight_normal_check(screen_shot)
             sound_util.playsound()
             return
         target_x, target_y = result[3]['result']
 
         if target_x == 0 and target_y == 0:
-            log_queue.put("Æ¥ÅäÊ§°Üµ¯´°µã»÷Ê§°Ü,ĞèÒªÊÖ¶¯´¦Àí")
+            log_queue.put("åŒ¹é…å¤±è´¥å¼¹çª—ç‚¹å‡»å¤±è´¥,éœ€è¦æ‰‹åŠ¨å¤„ç†")
             save_fight_normal_check(screen_shot)
             sound_util.playsound()
         else:
-            log_queue.put(f'¸ù¾İÔ¤²â½á¹û,µã»÷×ø±êÎª[x£º{target_x} < ; y£º{target_y}]')
+            log_queue.put(f'æ ¹æ®é¢„æµ‹ç»“æœ,ç‚¹å‡»åæ ‡ä¸º[xï¼š{target_x} < ; yï¼š{target_y}]')
             game_mouse.move_click(target_x, target_y)
             time.sleep(0.5)
             if self.__if_have_notification_check(rate):
-                log_queue.put("Æ¥ÅäÊ§°Üµ¯´°µã»÷Ê§°Ü,ĞèÒªÊÖ¶¯´¦Àí")
-                # TODO ÊÕ¼¯Ô¤²âÊ§°ÜµÄÍ¼Æ¬
+                log_queue.put("åŒ¹é…å¤±è´¥å¼¹çª—ç‚¹å‡»å¤±è´¥,éœ€è¦æ‰‹åŠ¨å¤„ç†")
+                # TODO æ”¶é›†é¢„æµ‹å¤±è´¥çš„å›¾ç‰‡
                 save_fight_normal_check(screen_shot)
                 sound_util.playsound()
 
@@ -110,28 +110,28 @@ class AutoFight:
         """
         if isFight.is_fighting():
             self.is_fighting = True
-            log_queue.put("Õ½¶·ÖĞ,¼ì²é²¢´¦Àíµ¯´°")
+            log_queue.put("æˆ˜æ–—ä¸­,æ£€æŸ¥å¹¶å¤„ç†å¼¹çª—")
             self.__auto_click_four_people(rate=0.85)
         else:
-            # ·ÇÕ½¶·ÖĞµÄ´¦Àí
-            # »Ö¸´
+            # éæˆ˜æ–—ä¸­çš„å¤„ç†
+            # æ¢å¤
             if self.is_fighting:
                 self.is_fighting = False
-                log_queue.put("Õ½¶·½áÊø,¼ì²éÈÎÎñ×´Ì¬...")
+                log_queue.put("æˆ˜æ–—ç»“æŸ,æ£€æŸ¥ä»»åŠ¡çŠ¶æ€...")
                 self.restore()
-                if 'ÎŞ' != self.auto_fight_setting['dazuo']:
+                if 'æ— ' != self.auto_fight_setting['dazuo']:
                     time.sleep(random.randint(1, 3))
                     if not isFight.is_fighting():
-                        log_queue.put("´ò×ø»ØÀ¶...")
+                        log_queue.put("æ‰“åå›è“...")
                         inputautogui.press(self.auto_fight_setting['dazuo'])
 
     def __auto_action(self):
         """
-        ¹¥»÷²Ù×÷
+        æ”»å‡»æ“ä½œ
         :return:
         """
         if isFight.is_fighting():
-            log_queue.put("Õ½¶·ÖĞ,µ¯´°ÒÑ´¦ÀíÍê±Ï,Ö´ĞĞÕ½¶·²Ù×÷")
+            log_queue.put("æˆ˜æ–—ä¸­,å¼¹çª—å·²å¤„ç†å®Œæ¯•,æ‰§è¡Œæˆ˜æ–—æ“ä½œ")
             if isFight.is_need_fight_action():
                 if self.auto_fight_setting["character_attack"] == "alt+a":
                     inputautogui.hotkey('alt', 'a')
@@ -146,10 +146,10 @@ class AutoFight:
                     inputautogui.hotkey('alt', 'q')
                 elif self.auto_fight_setting["bb_attack"] == "alt+d":
                     inputautogui.hotkey('alt', 'd')
-                # ²Ù×÷ÍêÔÙ¼ì²éÒ»´ÎÒÔÌá¸ß³ÌĞò½¡×³ĞÔ
+                # æ“ä½œå®Œå†æ£€æŸ¥ä¸€æ¬¡ä»¥æé«˜ç¨‹åºå¥å£®æ€§
                 if isFight.is_need_fight_action():
-                    # ÈçºÎÕ½¶·²Ù×÷À¸»¹ÔÚ,ËµÃ÷Ã»²Ù×÷³É¹¦
-                    # 1.¼ì²éÊó±êĞÎ×´ÊÇ·ñ±ä³ÉÁËÊ©·¨ĞÎ×´(Èç¹ûÁ½³¡Õ½¶·Ïà¸ôÊ±¼äÌ«½ü,ÓÖ¿ªÆôÁË¾ÆËÁ/Î×Ò½»Ö¸´µÄ»°,¿ÉÄÜ»áÔÚÕ½¶·ÖĞ°´ÏÂ¾ÆËÁ/Î×Ò½¿ì½İ¼ü)
+                    # å¦‚ä½•æˆ˜æ–—æ“ä½œæ è¿˜åœ¨,è¯´æ˜æ²¡æ“ä½œæˆåŠŸ
+                    # 1.æ£€æŸ¥é¼ æ ‡å½¢çŠ¶æ˜¯å¦å˜æˆäº†æ–½æ³•å½¢çŠ¶(å¦‚æœä¸¤åœºæˆ˜æ–—ç›¸éš”æ—¶é—´å¤ªè¿‘,åˆå¼€å¯äº†é…’è‚†/å·«åŒ»æ¢å¤çš„è¯,å¯èƒ½ä¼šåœ¨æˆ˜æ–—ä¸­æŒ‰ä¸‹é…’è‚†/å·«åŒ»å¿«æ·é”®)
                     result = match_img(self.__screenshot(), get_source("disable_mouse"), 10, 10, 0.95)[3]
                     if result is not None:
                         inputautogui.right_click()
@@ -158,74 +158,74 @@ class AutoFight:
                     # if result is not None:
                     #     inputautogui.right_click()
                     #     return self.__auto_action()
-                    # 2.Èç¹û²»ÊÇ1µÄÓ°Ïì,¿ÉÄÜÊÇaltÃ»ÉúĞ§Ö»°´ÁËq,µ¼ÖÂÔÚ´ò×Ö
+                    # 2.å¦‚æœä¸æ˜¯1çš„å½±å“,å¯èƒ½æ˜¯altæ²¡ç”Ÿæ•ˆåªæŒ‰äº†q,å¯¼è‡´åœ¨æ‰“å­—
             return True
         return False
 
     def restore(self):
-        # log_queue.put("¼ì²éÈËÎïºÍbb×´Ì¬ÊÇ·ñĞèÒª»Ö¸´")
+        # log_queue.put("æ£€æŸ¥äººç‰©å’ŒbbçŠ¶æ€æ˜¯å¦éœ€è¦æ¢å¤")
         img = self.__screenshot()
         state_width = 50
-        # ½ØÈ¡ÈËÎï×´Ì¬À¸
+        # æˆªå–äººç‰©çŠ¶æ€æ 
         character_img = crop_image_data(img, (955, 5), (1020, 50))
 
         # x, y, w, h = get_hp_rect(character_img)
         result = get_hp_rect(character_img)
         if result is not None and result[2] > 0:
-            log_queue.put("ÈËÎïhp x:{}, y:{}, w:{}, h:{}".format(result[0], result[1], result[2], result[3]))
+            log_queue.put("äººç‰©hp x:{}, y:{}, w:{}, h:{}".format(result[0], result[1], result[2], result[3]))
             character_hp_rate = round(result[2] / state_width * 100)
             log_queue.put(" character_hp_rate:{}".format(character_hp_rate))
             if character_hp_rate <= int(self.auto_fight_setting["character_hp_threshold"][:-1]):
                 log_queue.put(
-                    f'ÈËÎïÆøÑª°Ù·Ö±È{character_hp_rate},Ğ¡ÓÚ{self.auto_fight_setting["character_hp_threshold"]},ĞèÒªÖ´ĞĞ¼ÓÑªÖ¸Áî')
+                    f'äººç‰©æ°”è¡€ç™¾åˆ†æ¯”{character_hp_rate},å°äº{self.auto_fight_setting["character_hp_threshold"]},éœ€è¦æ‰§è¡ŒåŠ è¡€æŒ‡ä»¤')
                 self.restore_character_hp_command()
         else:
-            log_queue.put("Î´¶ÁÈ¡µ½ÈËÎïhp,²»×ö²Ù×÷")
+            log_queue.put("æœªè¯»å–åˆ°äººç‰©hp,ä¸åšæ“ä½œ")
 
         # x, y, w, h = get_mp_rect(character_img)
         result = get_mp_rect(character_img)
         if result is not None and result[2] > 0:
-            log_queue.put("ÈËÎïmp x:{}, y:{}, w:{}, h:{}".format(result[0], result[1], result[2], result[3]))
+            log_queue.put("äººç‰©mp x:{}, y:{}, w:{}, h:{}".format(result[0], result[1], result[2], result[3]))
             character_mp_rate = round(result[2] / state_width * 100)
             log_queue.put(" character_mp_rate:{}".format(character_mp_rate))
             if character_mp_rate <= int(self.auto_fight_setting["character_mp_threshold"][:-1]):
                 log_queue.put(
-                    f'ÈËÎïÄ§·¨°Ù·Ö±È:{character_mp_rate},Ğ¡ÓÚ{self.auto_fight_setting["character_mp_threshold"]},ĞèÒªÖ´ĞĞ¼ÓÀ¶Ö¸Áî')
+                    f'äººç‰©é­”æ³•ç™¾åˆ†æ¯”:{character_mp_rate},å°äº{self.auto_fight_setting["character_mp_threshold"]},éœ€è¦æ‰§è¡ŒåŠ è“æŒ‡ä»¤')
                 self.restore_character_mp_command()
         else:
-            log_queue.put("Î´¶ÁÈ¡µ½ÈËÎïmp,²»×ö²Ù×÷")
+            log_queue.put("æœªè¯»å–åˆ°äººç‰©mp,ä¸åšæ“ä½œ")
 
         bb_img = crop_image_data(img, (845, 5), (900, 38))
         result = get_hp_rect(bb_img)
         if result is not None and result[2] > 0:
-            log_queue.put("³èÎïhp x:{}, y:{}, w:{}, h:{}".format(result[0], result[1], result[2], result[3]))
+            log_queue.put("å® ç‰©hp x:{}, y:{}, w:{}, h:{}".format(result[0], result[1], result[2], result[3]))
             bb_hp_rate = round(result[2] / state_width * 100)
             if bb_hp_rate <= int(self.auto_fight_setting["bb_hp_threshold"][:-1]):
                 log_queue.put(
-                    f'bbÆøÑª°Ù·Ö±È:{bb_hp_rate},Ğ¡ÓÚ{self.auto_fight_setting["bb_hp_threshold"]},ĞèÒªÖ´ĞĞ¼ÓÑªÖ¸Áî')
+                    f'bbæ°”è¡€ç™¾åˆ†æ¯”:{bb_hp_rate},å°äº{self.auto_fight_setting["bb_hp_threshold"]},éœ€è¦æ‰§è¡ŒåŠ è¡€æŒ‡ä»¤')
 
                 self.restore_bb_hp_command()
         else:
-            log_queue.put("Î´¶ÁÈ¡µ½³èÎïhp,²»×ö²Ù×÷")
+            log_queue.put("æœªè¯»å–åˆ°å® ç‰©hp,ä¸åšæ“ä½œ")
 
         # x, y, w, h = get_mp_rect(bb_img)
         result = get_mp_rect(bb_img)
         if result is not None and result[2] > 0:
-            log_queue.put("³èÎïmp x:{}, y:{}, w:{}, h:{}".format(result[0], result[1], result[2], result[3]))
+            log_queue.put("å® ç‰©mp x:{}, y:{}, w:{}, h:{}".format(result[0], result[1], result[2], result[3]))
             bb_mp_rate = round(result[2] / state_width * 100)
             if bb_mp_rate <= int(self.auto_fight_setting["bb_mp_threshold"][:-1]):
                 log_queue.put(
-                    f'bbÄ§·¨°Ù·Ö±È:{bb_mp_rate},Ğ¡ÓÚ{self.auto_fight_setting["bb_mp_threshold"]},ĞèÒªÖ´ĞĞ¼ÓÀ¶Ö¸Áî')
+                    f'bbé­”æ³•ç™¾åˆ†æ¯”:{bb_mp_rate},å°äº{self.auto_fight_setting["bb_mp_threshold"]},éœ€è¦æ‰§è¡ŒåŠ è“æŒ‡ä»¤')
                 self.restore_bb_mp_command()
         else:
-            log_queue.put("Î´¶ÁÈ¡µ½³èÎïmp,²»×ö²Ù×÷")
+            log_queue.put("æœªè¯»å–åˆ°å® ç‰©mp,ä¸åšæ“ä½œ")
 
     def restore_character_hp_command(self):
-        if 'ÓÒ¼ü×´Ì¬Ìõ' == self.auto_fight_setting['character_restore_type']:
-            # Èç¹ûÊÇÓÒ¼ü»Ö¸´Ç°ÏÈ¼ì²éÊÇ·ñÓĞ¶Ô»°¿ò²¢´¦Àí
+        if 'å³é”®çŠ¶æ€æ¡' == self.auto_fight_setting['character_restore_type']:
+            # å¦‚æœæ˜¯å³é”®æ¢å¤å‰å…ˆæ£€æŸ¥æ˜¯å¦æœ‰å¯¹è¯æ¡†å¹¶å¤„ç†
             self.click_dialog()
             game_mouse.move_right_click(random.randint(973, 1015), 10)
-        elif '×øÆï¾ÆËÁ' == self.auto_fight_setting['character_restore_type']:
+        elif 'åéª‘é…’è‚†' == self.auto_fight_setting['character_restore_type']:
             game_mouse.locked_client_move(random.randint(500, 700), random.randint(200, 400))
             inputautogui.press(self.auto_fight_setting['stay'])
             time.sleep(random.randint(10, 15) / 10)
@@ -234,10 +234,10 @@ class AutoFight:
             game_mouse.move_click(target_x, target_y, bias=3)
 
     def restore_character_mp_command(self):
-        if 'ÓÒ¼ü×´Ì¬Ìõ' == self.auto_fight_setting['character_restore_type']:
+        if 'å³é”®çŠ¶æ€æ¡' == self.auto_fight_setting['character_restore_type']:
             self.click_dialog()
             game_mouse.move_right_click(random.randint(973, 1015), 21)
-        elif '×øÆï¾ÆËÁ' == self.auto_fight_setting['character_restore_type']:
+        elif 'åéª‘é…’è‚†' == self.auto_fight_setting['character_restore_type']:
             game_mouse.locked_client_move(random.randint(500, 700), random.randint(200, 400))
             inputautogui.press(self.auto_fight_setting['stay'])
             time.sleep(random.randint(10, 15) / 10)
@@ -246,24 +246,24 @@ class AutoFight:
             game_mouse.move_click(target_x, target_y, bias=3)
 
     def restore_bb_hp_command(self):
-        if 'ÓÒ¼ü×´Ì¬Ìõ' == self.auto_fight_setting['bb_restore_type']:
+        if 'å³é”®çŠ¶æ€æ¡' == self.auto_fight_setting['bb_restore_type']:
             self.click_dialog()
             game_mouse.move_right_click(random.randint(852, 895), 10)
-        elif '×øÆïÎ×Ò½' == self.auto_fight_setting['bb_restore_type']:
+        elif 'åéª‘å·«åŒ»' == self.auto_fight_setting['bb_restore_type']:
             inputautogui.press(self.auto_fight_setting['wuyi'])
             click_button("confirm_rest_button")
 
     def restore_bb_mp_command(self):
-        if 'ÓÒ¼ü×´Ì¬Ìõ' == self.auto_fight_setting['bb_restore_type']:
+        if 'å³é”®çŠ¶æ€æ¡' == self.auto_fight_setting['bb_restore_type']:
             self.click_dialog()
             game_mouse.move_right_click(random.randint(852, 895), 21)
-        elif '×øÆïÎ×Ò½' == self.auto_fight_setting['bb_restore_type']:
+        elif 'åéª‘å·«åŒ»' == self.auto_fight_setting['bb_restore_type']:
             inputautogui.press(self.auto_fight_setting['wuyi'])
             click_button("confirm_rest_button")
 
     def click_dialog(self):
         """
-        ¼ì²éµ±Ç°Ò³ÃæÊÇ·ñÓĞ¶Ô»°¿ò,ÓĞµÄ»°µãµô
+        æ£€æŸ¥å½“å‰é¡µé¢æ˜¯å¦æœ‰å¯¹è¯æ¡†,æœ‰çš„è¯ç‚¹æ‰
         :return:
         """
         while True:

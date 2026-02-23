@@ -68,7 +68,7 @@ def if_windows_in_screen():
     :return:
     """
     if module_task_stop_event.is_set():
-        module_task_stop_event.clear()
+        # module_task_stop_event.clear()
         return
     if win32gui.GetWindowText(win32gui.GetForegroundWindow()) != win32gui.GetWindowText(WINDOW_ID):
         log_queue.put("梦幻西游不在当前窗口,请将梦幻西游窗口打开为当前窗口...")

@@ -273,7 +273,7 @@ class Mouse:
         :return:
         """
         if module_task_stop_event.is_set():
-            module_task_stop_event.clear()
+            # module_task_stop_event.clear()
             return
         if win32gui.GetWindowText(win32gui.GetForegroundWindow()) == self.name:
             return
