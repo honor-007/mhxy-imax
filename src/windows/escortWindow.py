@@ -263,8 +263,8 @@ class EscortGui():
 
     def start_escort_task(self):
         # 1 开始前的统一检查
-        if not check_util.before_start_check(escort_setting):
-            return
+        # if not check_util.before_start_check(escort_setting):
+        #     return
         # 2 恢复停止事件的默认设置
         clear_escort_event()
         # 3 开启线程
