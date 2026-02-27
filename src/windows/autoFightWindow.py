@@ -78,8 +78,8 @@ class AutoFightGui():
                                              row=0, col=3, bootstyle='outline-warning', padx=8)
 
     def start_auto_fight_task(self):
-        # if not check_util.before_start_check(auto_fight_setting):
-        #     return
+        if not check_util.before_start_check(auto_fight_setting):
+            return
         clear_auto_fight_event()
         self.auto_fight_thread = threading.Thread(target=self.auto_fight_task)
         self.auto_fight_thread.start()

@@ -72,7 +72,7 @@ class IsMovedTask:
             return
         else:
             log_queue("梦幻西游不在当前窗口,请将梦幻西游窗口打开为当前窗口...")
-            time.sleep(1)
+            time.sleep(3)
             self.__if_windows_in_screen()
             return
 

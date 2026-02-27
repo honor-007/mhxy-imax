@@ -74,5 +74,5 @@ auto_fight_setting = load_json('auto_fight_setting_json')
 # 系统设置相关json文件
 system_setting = load_json("system_setting_json")
 # 激活相关
-# activate_setting = load_json('activate_setting_json')
+activate_setting = load_json('activate_setting_json')
 

@@ -5,7 +5,7 @@ from ttkbootstrap.dialogs import Messagebox
 
 from assets.sources import activate_setting
 from script_utils.loggerConfig import logger
-from src.windows.applicationWindow import AppilcationGui
+from src.windows.applicationWindow import ApplicationGui
 
 
 class ActivateGui():
@@ -91,7 +91,7 @@ class ActivateGui():
             self.root.destroy()
             # for widget in self.root.winfo_children():
             #     widget.destroy()
-            # applicationGui = AppilcationGui(self.root)
+            # applicationGui = ApplicationGui(self.root)
             # applicationGui.start_application_window()
             # print("激活成功")
         else:
@@ -107,7 +107,7 @@ class ActivateGui():
             self.root.destroy()
             # for widget in self.root.winfo_children():
             #     widget.destroy()
-            # applicationGui = AppilcationGui(self.root)
+            # applicationGui = ApplicationGui(self.root)
             # applicationGui.start_application_window()
         else:
             Messagebox.show_error(title='激活失败', message=f'激活失败,请检查激活码')

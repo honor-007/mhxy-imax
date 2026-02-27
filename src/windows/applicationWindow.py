@@ -11,7 +11,7 @@ from src.windows import escortWindow, autoFightWindow, systemWindow, logWindow, 
 from src.utils import globalVariable
 
 
-class AppilcationGui():
+class ApplicationGui():
     """程序主窗口"""
 
     def __init__(self, root_window):
@@ -120,5 +120,5 @@ class AppilcationGui():
 
 if __name__ == "__main__":
     root = tk.Window(themename='flatly')
-    applicationGui = AppilcationGui(root)
+    applicationGui = ApplicationGui(root)
     applicationGui.start_application_window()

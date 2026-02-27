@@ -80,17 +80,17 @@ class AutoFight:
         min_index = hm.model_predict(hover_list)
         # TODO 计算点击坐标(暂时设置为 识别出的切割图片的中心位置)
         screen_shot = self.__screenshot()
+        #  收集图片后期训练用
+        save_fight_normal_check(screen_shot)
         result = match_img(screen_shot, hover_list[min_index], 10, 10, 0.95)
         if result[3] is None:
             log_queue.put("匹配失败弹窗点击失败,需要手动处理")
-            save_fight_normal_check(screen_shot)
             sound_util.playsound()
             return
         target_x, target_y = result[3]['result']
 
         if target_x == 0 and target_y == 0:
             log_queue.put("匹配失败弹窗点击失败,需要手动处理")
-            save_fight_normal_check(screen_shot)
             sound_util.playsound()
         else:
             log_queue.put(f'根据预测结果,点击坐标为[x：{target_x} < ; y：{target_y}]')
@@ -98,16 +98,16 @@ class AutoFight:
             time.sleep(0.5)
             if self.__if_have_notification_check(rate):
                 log_queue.put("匹配失败弹窗点击失败,需要手动处理")
-                # TODO 收集预测失败的图片
-                save_fight_normal_check(screen_shot)
                 sound_util.playsound()
 
-    def __auto_fight_first_step(self, rate=0.85):
-        """
-        :param fight_type:
-        :param rate:
-        :return:
-        """
+    """
+    刚进入战斗的处理
+    :param fight_type:
+    :param rate:
+    :return:
+    """
+    def __auto_fight_begin(self, rate=0.85):
+        log_queue.put("1 __auto_fight_begin")
         if isFight.is_fighting():
             self.is_fighting = True
             log_queue.put("战斗中,检查并处理弹窗")
@@ -125,7 +125,7 @@ class AutoFight:
                         log_queue.put("打坐回蓝...")
                         inputautogui.press(self.auto_fight_setting['dazuo'])
 
-    def __auto_action(self):
+    def __fight_action(self):
         """
         攻击操作
         :return:
@@ -133,6 +133,7 @@ class AutoFight:
         if isFight.is_fighting():
             log_queue.put("战斗中,弹窗已处理完毕,执行战斗操作")
             if isFight.is_need_fight_action():
+                log_queue.put("战斗中,需要执行战斗操作")
                 if self.auto_fight_setting["character_attack"] == "alt+a":
                     inputautogui.hotkey('alt', 'a')
                 elif self.auto_fight_setting["character_attack"] == "alt+q":
@@ -153,11 +154,11 @@ class AutoFight:
                     result = match_img(self.__screenshot(), get_source("disable_mouse"), 10, 10, 0.95)[3]
                     if result is not None:
                         inputautogui.right_click()
-                        return self.__auto_action()
+                        return self.__fight_action()
                     # result = match_img(self.__screenshot(), get_source("magic_mouse"), 10, 10, 0.95)[3]
                     # if result is not None:
                     #     inputautogui.right_click()
-                    #     return self.__auto_action()
+                    #     return self.__fight_action()
                     # 2.如果不是1的影响,可能是alt没生效只按了q,导致在打字
             return True
         return False
@@ -276,10 +277,11 @@ class AutoFight:
                 break
 
     def __automation(self, fight_type, rate):
+        log_queue.put("1 __automation")
         while not auto_fight_stop_event.is_set():
             if_windows_in_screen()
-            self.__auto_fight_first_step(rate)
-            self.__auto_action()
+            self.__auto_fight_begin(rate)
+            self.__fight_action()
             time.sleep(0.5)
 
     def run(self, fight_type=0, rate=0.85):

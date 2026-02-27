@@ -100,38 +100,62 @@ def find_all_template(im_source, im_search, threshold=0.5, maxcnt=0, rgb=False, 
 
 def match_img(img_src, img_obj, phone_x, phone_y, confidence_value=0.0, mask=None, method=None):
     """
-    :param img_src: 需要查询的图片
-    :param img_obj: 查询的模板图
-    :param phone_x:
-    :param phone_y:
-    :param confidence_value: 阈值
-    :param mask: 掩码图，适用于非矩形模板匹配
-    :param method: 模板匹配使用的方法，默认为None
-    :return: position_x
-            position_y
-            str(match_result['confidence'])[:4]   相似度
-            match_result {'result': (58.5, 385.5) 中心点位, 'rectangle': ((43, 366), (43, 405), (74, 366), (74, 405)) 左上 左下 右上 右下 四顶点坐标,
-                            'confidence': 0.9999997019767761, 'shape': (1025, 769) 对比图大小}
+    在源图像中查找模板图像，并将匹配位置映射到实际设备屏幕坐标。
+
+    核心流程：
+        1. 将输入图像统一转换为 numpy 数组格式
+        2. 调用 find_template 进行模板匹配，获取匹配位置和置信度
+        3. 根据源图像尺寸与设备屏幕尺寸的比例，将匹配坐标映射为设备上的实际坐标
+
+    :param img_src: 源图像（截屏图），可以是文件路径(str)或已加载的图像数据(numpy.ndarray)
+    :param img_obj: 模板图像（要查找的目标小图），可以是文件路径(str)或已加载的图像数据(numpy.ndarray)
+    :param phone_x: 设备屏幕的实际宽度（像素），用于坐标映射
+    :param phone_y: 设备屏幕的实际高度（像素），用于坐标映射
+    :param confidence_value: 匹配置信度阈值，低于此值的匹配结果将被忽略，默认0.0
+    :param mask: 掩码图像，用于非矩形区域的模板匹配，可以是文件路径(str)或numpy.ndarray，默认None
+    :param method: cv2模板匹配算法，如cv2.TM_CCOEFF_NORMED等，默认None（使用TM_CCOEFF_NORMED）
+    :return: 四元组 (position_x, position_y, confidence_str, match_result)
+            - position_x: 匹配位置映射到设备屏幕后的x坐标（int），未匹配时为None
+            - position_y: 匹配位置映射到设备屏幕后的y坐标（int），未匹配时为None
+            - confidence_str: 置信度字符串，截取前4个字符（如"0.99"），未匹配时为None
+            - match_result: 完整匹配结果字典，包含以下字段，未匹配时为None
+                - 'result': (x, y) 模板在源图像中的中心坐标
+                - 'rectangle': 四顶点坐标 (左上, 左下, 右上, 右下)
+                - 'confidence': 匹配置信度浮点数
+                - 'shape': (width, height) 源图像的宽高
     """
+    # 如果传入的是文件路径字符串，则通过cv2读取为numpy数组
     if not isinstance(img_src, numpy.ndarray):
         img_src = cv2.imread(img_src)
     if not isinstance(img_obj, numpy.ndarray):
         img_obj = cv2.imread(img_obj)
+
+    # 处理掩码参数：None则不使用掩码，路径则以灰度模式读取，数组则直接使用
     if mask is None:
         img_mask = mask
     else:
         if not isinstance(mask, numpy.ndarray):
-            img_mask = cv2.imread(mask, 0)
+            img_mask = cv2.imread(mask, 0)  # 以灰度模式读取掩码图
         else:
             img_mask = mask
+
+    # 调用 find_template 执行模板匹配，返回最佳匹配结果（单个dict或None）
     match_result = find_template(img_src, img_obj, confidence_value, rgb=False, mask=img_mask, method=method)
+
     if match_result is not None:
-        match_result['shape'] = (img_src.shape[1], img_src.shape[0])  # 0为高，1为宽
-        x, y = match_result['result']  # 标准图中小图位置x,y
-        shape_x, shape_y = tuple(map(int, match_result['shape']))  # 标准图中x,y
+        # 记录源图像的宽高到匹配结果中（shape[0]是高度，shape[1]是宽度）
+        match_result['shape'] = (img_src.shape[1], img_src.shape[0])
+        # 获取模板在源图像中匹配到的中心坐标
+        x, y = match_result['result']
+        # 获取源图像的宽高（整数）
+        shape_x, shape_y = tuple(map(int, match_result['shape']))
+        # 按比例将源图像中的坐标映射到实际设备屏幕坐标
+        # 公式：设备坐标 = 设备尺寸 * (源图像中的坐标 / 源图像尺寸)
         position_x, position_y = int(phone_x * (x / shape_x)), int(phone_y * (y / shape_y))
     else:
+        # 未找到匹配结果，返回四个None
         return None, None, None, None
+
     return position_x, position_y, str(match_result['confidence'])[:4], match_result
 
 

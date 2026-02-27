@@ -100,8 +100,8 @@ class EscortGui():
                                              row=0, col=3, bootstyle='outline-warning', padx=8)
 
     def start_escort_task(self):
-        # if not check_util.before_start_check(escort_setting):
-        #     return
+        if not check_util.before_start_check(escort_setting):
+            return
         clear_escort_event()
         self.escort_thread = threading.Thread(target=self.escort_task)
         self.auto_fight_thread = threading.Thread(target=self.auto_fight_task)

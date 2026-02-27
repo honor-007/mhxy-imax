@@ -3,7 +3,7 @@ from tkinter.messagebox import showinfo
 import ttkbootstrap as tk
 
 
-from src.windows.applicationWindow import AppilcationGui
+from src.windows.applicationWindow import ApplicationGui
 
 if __name__ == "__main__":
     # TODO 正式环境删除
@@ -17,6 +17,6 @@ if __name__ == "__main__":
         #     gv.activate_flag = True
         # 打开脚本窗口
         root = tk.Window(themename='flatly')
-        applicationGui = AppilcationGui(root)
+        applicationGui = ApplicationGui(root)
         applicationGui.start_application_window()
 
